@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Investment Advisor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .loading {
+            display: none;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">AI Investment Advisor</h1>
+        
+        <!-- Input Form -->
+        <div class="max-w-xl mx-auto bg-white rounded-lg shadow-md p-6 mb-8">
+            <form id="analysisForm" class="space-y-4">
+                <div>
+                    <label for="stock_code" class="block text-sm font-medium text-gray-700">Stock Code</label>
+                    <input type="text" id="stock_code" name="stock_code" 
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                           placeholder="e.g., 000688.SZ"
+                           required>
+                    <p class="mt-1 text-sm text-gray-500">Format: xxxxxx.SZ for Shenzhen stocks, xxxxxx.SS for Shanghai stocks</p>
+                </div>
+                <button type="submit" 
+                        class="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    Analyze
+                </button>
+            </form>
+            <div id="loading" class="loading"></div>
+            <div id="error" class="mt-4 text-red-600 text-center" style="display: none;"></div>
+        </div>
+        
+        <!-- Results Section -->
+        <div id="results" class="max-w-4xl mx-auto space-y-6" style="display: none;">
+            <!-- Overall Analysis -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold mb-4">Overall Analysis</h2>
+                <div class="grid grid-cols-3 gap-4 mb-4">
+                    <div>
+                        <span class="text-sm text-gray-600">Signal</span>
+                        <p id="overall_signal" class="text-lg font-medium"></p>
+                    </div>
+                    <div>
+                        <span class="text-sm text-gray-600">Confidence</span>
+                        <p id="overall_confidence" class="text-lg font-medium"></p>
+                    </div>
+                    <div>
+                        <span class="text-sm text-gray-600">Symbol</span>
+                        <p id="symbol" class="text-lg font-medium"></p>
+                    </div>
+                </div>
+                <div id="warnings" class="mt-4 text-amber-600" style="display: none;"></div>
+            </div>
+            
+            <!-- Strategy Results -->
+            <div id="strategy_results" class="space-y-4">
+                <!-- Peter Lynch Strategy -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-lg font-semibold mb-3">Peter Lynch Strategy</h3>
+                    <div class="grid grid-cols-2 gap-4 mb-3">
+                        <div>
+                            <span class="text-sm text-gray-600">Signal</span>
+                            <p id="peter_lynch_signal" class="text-lg font-medium"></p>
+                        </div>
+                        <div>
+                            <span class="text-sm text-gray-600">Confidence</span>
+                            <p id="peter_lynch_confidence" class="text-lg font-medium"></p>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-sm text-gray-600">Reasoning</span>
+                        <p id="peter_lynch_reasoning" class="mt-1 text-gray-800"></p>
+                    </div>
+                </div>
+                
+                <!-- Warren Buffett Strategy -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-lg font-semibold mb-3">Warren Buffett Strategy</h3>
+                    <div class="grid grid-cols-2 gap-4 mb-3">
+                        <div>
+                            <span class="text-sm text-gray-600">Signal</span>
+                            <p id="warren_buffett_signal" class="text-lg font-medium"></p>
+                        </div>
+                        <div>
+                            <span class="text-sm text-gray-600">Confidence</span>
+                            <p id="warren_buffett_confidence" class="text-lg font-medium"></p>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-sm text-gray-600">Reasoning</span>
+                        <p id="warren_buffett_reasoning" class="mt-1 text-gray-800"></p>
+                    </div>
+                </div>
+                
+                <!-- Technical Analysis -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-lg font-semibold mb-3">Technical Analysis</h3>
+                    <div class="grid grid-cols-2 gap-4 mb-3">
+                        <div>
+                            <span class="text-sm text-gray-600">Signal</span>
+                            <p id="technical_signal" class="text-lg font-medium"></p>
+                        </div>
+                        <div>
+                            <span class="text-sm text-gray-600">Confidence</span>
+                            <p id="technical_confidence" class="text-lg font-medium"></p>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-sm text-gray-600">Reasoning</span>
+                        <p id="technical_reasoning" class="mt-1 text-gray-800"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('analysisForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Show loading spinner and hide previous results/errors
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            const error = document.getElementById('error');
+            const warnings = document.getElementById('warnings');
+            
+            loading.style.display = 'block';
+            results.style.display = 'none';
+            error.style.display = 'none';
+            if (warnings) warnings.style.display = 'none';
+            
+            const stockCode = document.getElementById('stock_code').value.trim();
+            
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `stock_code=${encodeURIComponent(stockCode)}`
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Update Overall Analysis
+                    document.getElementById('overall_signal').textContent = data.overall_signal;
+                    document.getElementById('overall_confidence').textContent = data.overall_confidence;
+                    document.getElementById('symbol').textContent = data.symbol;
+                    
+                    // Show any warnings if present
+                    if (data.warnings && data.warnings.length > 0) {
+                        warnings.innerHTML = data.warnings.map(w => `<p>⚠️ ${w}</p>`).join('');
+                        warnings.style.display = 'block';
+                    }
+                    
+                    // Update Strategy Results
+                    for (const [strategy, result] of Object.entries(data.analysis)) {
+                        document.getElementById(`${strategy}_signal`).textContent = result.signal;
+                        document.getElementById(`${strategy}_confidence`).textContent = result.confidence;
+                        document.getElementById(`${strategy}_reasoning`).textContent = result.reasoning;
+                    }
+                    
+                    results.style.display = 'block';
+                } else {
+                    error.textContent = data.error || 'An error occurred during analysis';
+                    error.style.display = 'block';
+                }
+            } catch (err) {
+                console.error('Error:', err);
+                error.textContent = 'Failed to analyze stock. Please try again.';
+                error.style.display = 'block';
+            } finally {
+                loading.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
