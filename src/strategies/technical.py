@@ -22,31 +22,27 @@ class TechnicalIndicators:
     market_breadth: float = 0.0  # Market breadth indicator
     
     def __post_init__(self):
-        """Validate data lengths and calculate basic indicators"""
-        # Validate input data types and ensure they are not None
-        self.close_prices = self.close_prices if isinstance(self.close_prices, list) else []
-        self.volumes = self.volumes if isinstance(self.volumes, list) else []
-        self.high_prices = self.high_prices if isinstance(self.high_prices, list) else []
-        self.low_prices = self.low_prices if isinstance(self.low_prices, list) else []
+        """Initialize and validate technical indicators data"""
+        # Validate required fields
+        if not isinstance(self.close_prices, list) or len(self.close_prices) < 2:
+            raise ValueError("close_prices must be a non-empty list with at least 2 values")
+            
+        if not isinstance(self.volumes, list):
+            raise ValueError("volumes must be a list")
+            
+        if not isinstance(self.high_prices, list) or len(self.high_prices) < 2:
+            raise ValueError("high_prices must be a non-empty list with at least 2 values")
+            
+        if not isinstance(self.low_prices, list) or len(self.low_prices) < 2:
+            raise ValueError("low_prices must be a non-empty list with at least 2 values")
+            
+        # Convert numpy arrays to lists if needed
+        self.close_prices = self._to_list(self.close_prices)
+        self.volumes = self._to_list(self.volumes)
+        self.high_prices = self._to_list(self.high_prices)
+        self.low_prices = self._to_list(self.low_prices)
         
-        # Ensure we have at least some data for analysis
-        if not self.close_prices or len(self.close_prices) < 1:
-            logger.warning("No close prices provided, using default values")
-            self.close_prices = [95.0, 96.0, 97.0, 98.0, 99.0, 100.0, 101.0, 102.0, 103.0, 104.0, 105.0, 106.0, 107.0, 108.0]
-            
-        if not self.volumes or len(self.volumes) < 1:
-            logger.warning("No volume data provided, using default values")
-            self.volumes = [900000, 950000, 920000, 930000, 940000, 950000, 960000, 970000, 980000, 990000, 1000000, 1010000, 1020000, 1030000]
-            
-        if not self.high_prices or len(self.high_prices) < 1:
-            logger.warning("No high prices provided, using default values")
-            self.high_prices = [101.0, 102.0, 103.0, 104.0, 105.0, 106.0, 107.0, 108.0, 109.0, 110.0, 111.0, 112.0, 113.0, 114.0]
-            
-        if not self.low_prices or len(self.low_prices) < 1:
-            logger.warning("No low prices provided, using default values")
-            self.low_prices = [89.0, 90.0, 91.0, 92.0, 93.0, 94.0, 95.0, 96.0, 97.0, 98.0, 99.0, 100.0, 101.0, 102.0]
-        
-        # Corrected validation: check minimum length of data lists
+        # Ensure all lists have the same length
         lengths = {
             'close_prices': len(self.close_prices),
             'volumes': len(self.volumes),
@@ -54,23 +50,21 @@ class TechnicalIndicators:
             'low_prices': len(self.low_prices)
         }
         
-        # Ensure all lists have the same length
+        # If lengths differ, truncate longer lists to match the shortest one
         if len(set(lengths.values())) != 1:
             min_length = min(lengths.values())
             if min_length > 0:
-                # Truncate all lists to the shortest length
                 self.close_prices = self.close_prices[:min_length]
                 self.volumes = self.volumes[:min_length]
                 self.high_prices = self.high_prices[:min_length]
                 self.low_prices = self.low_prices[:min_length]
-        
-        # Initialize calculated indicators to None
-        self._sma_50 = None
-        self._sma_200 = None
-        self._rsi_14 = None
-        self._macd = None
-        self._volume_ma = None
     
+    def _to_list(self, data: Union[list, np.ndarray]) -> list:
+        """Helper method to convert numpy arrays to lists"""
+        if isinstance(data, np.ndarray):
+            return data.tolist()
+        return data
+        
     def get(self, key: str, default: Any = None) -> Any:
         """Implement dictionary-like get method"""
         try:
@@ -100,34 +94,94 @@ class TechnicalIndicators:
     @property
     def sma_50(self):
         """Calculate 50-day simple moving average"""
-        if self._sma_50 is None and len(self.close_prices) >= 50:
-            self._sma_50 = np.mean(self.close_prices[-50:])
-        return self._sma_50
+        if len(self.close_prices) >= 50:
+            return np.mean(self.close_prices[-50:])
+        elif len(self.close_prices) >= 1:
+            return float(self.close_prices[-1])
+        return 0.0
     
     @property
     def sma_200(self):
         """Calculate 200-day simple moving average"""
-        if self._sma_200 is None and len(self.close_prices) >= 200:
-            self._sma_200 = np.mean(self.close_prices[-200:])
-        return self._sma_200
+        if len(self.close_prices) >= 200:
+            return np.mean(self.close_prices[-200:])
+        elif len(self.close_prices) >= 1:
+            return float(self.close_prices[-1])
+        return 0.0
     
     @property
     def rsi_14(self):
         """Calculate 14-day Relative Strength Index"""
-        if self._rsi_14 is None and len(self.close_prices) >= 15:
-            # RSI calculation would go here
-            # For simplicity, returning a placeholder
-            self._rsi_14 = 50.0
-        return self._rsi_14
+        if len(self.close_prices) >= 14:
+            return self._calculate_rsi(np.array(self.close_prices))
+        return 50.0  # Neutral RSI
     
     @property
     def macd(self):
         """Calculate MACD indicator"""
-        if self._macd is None and len(self.close_prices) >= 26:
-            # MACD calculation would go here
-            # For simplicity, returning a placeholder
-            self._macd = {'macd': 0, 'signal': 0, 'histogram': 0}
-        return self._macd
+        if len(self.close_prices) >= 26:
+            return self._calculate_macd(np.array(self.close_prices))
+        return {'macd': 0.0, 'signal': 0.0, 'histogram': 0.0}
+    
+    def _calculate_rsi(self, prices: np.ndarray) -> float:
+        """Internal method to calculate RSI"""
+        try:
+            if len(prices) < 14:
+                return 50.0
+                
+            deltas = np.diff(prices)
+            seed = deltas[:14]
+            up = seed[seed >= 0].sum() / 14
+            down = -seed[seed < 0].sum() / 14
+            
+            rs = up / down if down != 0 else float('inf')
+            rsi = 100. - 100. / (1. + rs)
+            
+            # Smooth with Wilder's formula for remaining values
+            for i in range(14, len(deltas)):
+                delta = deltas[i]
+                if delta > 0:
+                    up = (up * 13 + delta) / 14
+                    down = (down * 13) / 14
+                else:
+                    up = (up * 13) / 14
+                    down = (down * 13 - delta) / 14
+                
+                rs = up / down if down != 0 else float('inf')
+                rsi = 100. - 100. / (1. + rs)
+                
+            return float(rsi)
+        except Exception as e:
+            logger.error(f"Error calculating RSI: {str(e)}")
+            return 50.0  # Return neutral value on error
+    
+    def _calculate_macd(self, prices: np.ndarray) -> Dict[str, float]:
+        """Internal method to calculate MACD"""
+        try:
+            if len(prices) < 26:
+                return {'macd': 0.0, 'signal': 0.0, 'histogram': 0.0}
+                
+            # Calculate EMAs
+            ema12 = pd.Series(prices).ewm(span=12, adjust=False).mean().values
+            ema26 = pd.Series(prices).ewm(span=26, adjust=False).mean().values
+            
+            # Calculate MACD line
+            macd_line = ema12 - ema26
+            
+            # Calculate signal line (9-day EMA of MACD line)
+            signal_line = pd.Series(macd_line).ewm(span=9, adjust=False).mean().values
+            
+            # Calculate histogram
+            histogram = macd_line - signal_line
+            
+            return {
+                'macd': float(macd_line[-1]),
+                'signal': float(signal_line[-1]),
+                'histogram': float(histogram[-1])
+            }
+        except Exception as e:
+            logger.error(f"Error calculating MACD: {str(e)}")
+            return {'macd': 0.0, 'signal': 0.0, 'histogram': 0.0}
 
 
 class TechnicalStrategy(BaseStrategy):

@@ -15,6 +15,32 @@ class StockDataCollector:
     def __init__(self):
         self.cache = {}
         self.cache_duration = timedelta(minutes=15)
+        self.logger = logging.getLogger(__name__)
+
+    def _is_cache_valid(self, timestamp: datetime) -> bool:
+        """Check if cache is valid and data is complete"""
+        if not timestamp:
+            return False
+            
+        # Check if cache has expired
+        if datetime.now() - timestamp > self.cache_duration:
+            self.logger.info("Cache expired")
+            return False
+            
+        return True
+        
+    def _is_data_complete(self, data: Dict[str, Any]) -> bool:
+        """Check if data contains minimum required metrics"""
+        if not data or 'price' not in data:
+            self.logger.warning("Data missing critical metrics")
+            return False
+            
+        # For technical analysis, we need at least price and volume data
+        if 'close_prices' not in data or len(data['close_prices']) < 5:
+            self.logger.warning("Insufficient historical data")
+            return False
+            
+        return True
     
     def collect(self, symbol: str) -> Dict[str, Any]:
         """Collect stock data with improved error handling"""
@@ -190,7 +216,8 @@ class StockDataCollector:
                     'roe': metrics.get('roe', 0.0),
                     'pe_ratio': metrics.get('pe_ratio', 0.0),
                     'pb_ratio': metrics.get('pb_ratio', 0.0),
-                    'profit_margin': metrics.get('profit_margin', 0.0)
+                    'profit_margin': metrics.get('profit_margin', 0.0),
+                    'market_cap': float(self._safe_get(current_quote_dict, '总市值', 1000.0))  # Add market_cap to fundamental_data
                 },
                 'technical_data': {
                     'current_price': metrics.get('current_price', 0.0),

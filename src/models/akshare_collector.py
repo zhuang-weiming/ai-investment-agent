@@ -57,8 +57,8 @@ class AKShareCollector:
     # Constants with both Chinese and English field names
     FIELD_MAPPINGS = {
         'market_cap': ['总市值', 'market_cap', 'total_market_value', '市值'],
-        'pe_ratio': ['市盈率', 'PE', 'pe_ratio', 'PE_TTM', '市盈率(动态)', '市盈率(静态)'],
-        'pb_ratio': ['市净率', 'PB', 'pb_ratio', '市净率(动态)', '市净率(静态)'],
+        'pe_ratio': ['市盈率', 'PE', 'pe_ratio', 'PE_TTM', '市盈率-动态', '市盈率(静态)'],
+        'pb_ratio': ['市净率', 'PB', 'pb_ratio', '市净率-动态', '市净率(静态)'],
         'revenue_growth': ['营业收入同比增长率', 'revenue_yoy_growth', '营收增长率'],
         'eps_growth': ['基本每股收益同比增长率', 'eps_yoy_growth', '每股收益增长率'],
         'roe': ['净资产收益率', 'ROE', 'roe', '净资产收益率(加权)'],
@@ -68,9 +68,10 @@ class AKShareCollector:
         'depreciation': ['折旧和摊销', 'depreciation', '折旧'],
         'capex': ['资本支出', 'capital_expenditure', '资本开支'],
         'volume': ['成交量', 'volume', '成交量(手)'],
-        'close': ['收盘', 'close', '收盘价'],
-        'high': ['最高', 'high', '最高价'],
-        'low': ['最低', 'low', '最低价']
+        'close': ['收盘价', 'close', '收盘价'],  # Updated from '收盘' to '收盘价'
+        'high': ['最高价', 'high', '最高价'],    # Updated from '最高' to '最高价'
+        'low': ['最低价', 'low', '最低价'],      # Updated from '最低' to '最低价'
+        'open': ['今开', 'open', '开盘价']       # Added new mapping for open price
     }
 
     def __init__(self):
@@ -135,6 +136,36 @@ class AKShareCollector:
         except:
             return None
 
+    async def _get_industry_metrics(self, symbol: str) -> Dict[str, Any]:
+        """Get industry metrics for a stock."""
+        try:
+            # 获取行业指标
+            # 由于 AKShare 没有提供 stock_industry_pe_analysis 方法，此方法暂时禁用
+            return {}
+        except Exception as e:
+            self.logger.warning(f"Error getting industry metrics: {str(e)}")
+            return {}
+
+    async def _get_fundamental_indicators(self, symbol: str) -> Dict[str, Any]:
+        """Get fundamental indicators for a stock."""
+        try:
+            # 获取基本面指标
+            # 由于 AKShare 相关方法不可用，暂时返回空字典
+            return {}
+        except Exception as e:
+            self.logger.warning(f"Error getting fundamental indicators: {str(e)}")
+            return {}
+
+    async def _get_additional_market_data(self, symbol: str) -> Dict[str, Any]:
+        """Get additional market data for a stock."""
+        try:
+            # 获取额外的市场数据
+            # 由于 AKShare 相关方法不可用，暂时返回空字典
+            return {}
+        except Exception as e:
+            self.logger.warning(f"Error getting additional market data: {str(e)}")
+            return {}
+
     async def collect_stock_data(self, symbol: str, vix: Optional[float] = None) -> Dict[str, Any]:
         """Collect fundamental and technical data using AKShare"""
         try:
@@ -156,22 +187,26 @@ class AKShareCollector:
             industry = self._get_field_value(stock_info, '所属行业', 'Unknown')
             
             # Get industry metrics
-            industry_metrics = self._get_industry_metrics(symbol)
+            industry_metrics = await self._get_industry_metrics(symbol)
             
             # Collect financial data from multiple sources
-            financial_data = self._get_fundamental_indicators(symbol)
+            financial_data = await self._get_fundamental_indicators(symbol)
             
             # Get additional market data
-            additional_data = self._get_additional_market_data(symbol)
+            additional_data = await self._get_additional_market_data(symbol)
             
             # Get realtime market data
             try:
                 realtime_quotes = ak.stock_zh_a_spot_em()
                 current_quote = realtime_quotes[realtime_quotes['代码'] == symbol].iloc[0]
+                
+                # Convert Series to dict for better error handling
+                current_quote_dict = current_quote.to_dict() if not current_quote.empty else {}
             except Exception as e:
                 logger.error(f"Error fetching quote data: {str(e)}")
                 current_quote = pd.Series()
-
+                current_quote_dict = {}
+            
             # Get historical price data with fallback
             try:
                 start_date = (datetime.now() - timedelta(days=365)).strftime('%Y%m%d')
@@ -236,7 +271,16 @@ class AKShareCollector:
                     'change_pct': self._get_field_value(current_quote, '涨跌幅', None),
                     'vix': vix
                 },
-                'fundamental_data': metrics,
+                'fundamental_data': {
+                    'market_cap': metrics.get('market_cap'),
+                    'pe_ratio': metrics.get('pe_ratio'),
+                    'pb_ratio': metrics.get('pb_ratio'),
+                    'revenue_growth': metrics.get('revenue_growth'),
+                    'eps_growth': metrics.get('eps_growth'),
+                    'roe': metrics.get('roe'),
+                    'profit_margin': metrics.get('profit_margin'),
+                    'debt_ratio': metrics.get('debt_ratio')
+                },
                 'technical_data': {
                     'close_prices': hist_data[self._get_column_name(hist_data, ['收盘', 'close'])].tolist() if not hist_data.empty else [],
                     'volumes': hist_data[self._get_column_name(hist_data, ['成交量', 'volume'])].tolist() if not hist_data.empty else [],
@@ -350,7 +394,7 @@ class AKShareCollector:
 
             # Technical metrics
             if not hist_data.empty:
-                close_prices = hist_data[self._get_column_name(hist_data, ['收盘', 'close'])].values
+                close_prices = hist_data[self._get_column_name(hist_data, ['收盘价', 'close'])].values
                 volumes = hist_data[self._get_column_name(hist_data, ['成交量', 'volume'])].values
 
                 # Moving averages
@@ -368,7 +412,16 @@ class AKShareCollector:
             # Current market metrics
             metrics['price'] = self._get_field_value(current_quote, '最新价', 0.0)
             metrics['volume'] = self._get_field_value(current_quote, '成交量', 0.0)
-            metrics['market_cap'] = self._get_field_value(current_quote, 'market_cap', 0.0)
+            
+            # Get market_cap from current_quote using the correct field name
+            if not current_quote.empty:
+                try:
+                    metrics['market_cap'] = float(current_quote.get('总市值', 0.0))
+                except (ValueError, TypeError):
+                    metrics['market_cap'] = 0.0
+            else:
+                metrics['market_cap'] = 0.0
+                
             metrics['price_change_pct'] = self._get_field_value(current_quote, '涨跌幅', 0.0)
             
             # Try to get additional fundamental metrics
@@ -412,54 +465,6 @@ class AKShareCollector:
             if encoded_names:
                 return encoded_names[0]
         raise ValueError(f"Could not find any of these columns: {possible_names}")
-
-    def _get_fundamental_indicators(self, symbol: str) -> pd.DataFrame:
-        """Get fundamental indicators from multiple sources"""
-        try:
-            # Try main financial indicators first
-            data = ak.stock_financial_analysis_indicator(symbol=symbol)
-            
-            if data.empty:
-                # Try alternative source: stock_a_lg_indicator
-                data = ak.stock_a_lg_indicator(symbol=symbol)
-            
-            if data.empty:
-                # Try another alternative: stock_financial_abstract
-                data = ak.stock_financial_abstract(symbol=symbol)
-                
-            if data.empty:
-                # As last resort, try getting basic info
-                data = ak.stock_individual_info_em(symbol=symbol)
-                
-            return data
-        except Exception as e:
-            logger.error(f"Error getting fundamental indicators: {str(e)}")
-            return pd.DataFrame()
-
-    def _get_industry_metrics(self, symbol: str) -> Dict[str, float]:
-        """Get industry related metrics"""
-        try:
-            # Get industry data
-            ind_data = ak.stock_industry_pe_analysis(symbol=symbol[:6])
-            metrics = {}
-            
-            if not ind_data.empty:
-                metrics['industry_pe'] = self._get_field_value(ind_data, '行业市盈率', 0.0)
-                metrics['industry_pb'] = self._get_field_value(ind_data, '行业市净率', 0.0)
-                metrics['market_concentration'] = self._get_field_value(ind_data, '行业集中度', 50.0)
-            
-            # Get company position in industry
-            try:
-                rank_data = ak.stock_rank_cxg(symbol=symbol[:6])
-                if not rank_data.empty:
-                    metrics['competitive_position'] = self._get_field_value(rank_data, '排名', 0.0)
-            except:
-                pass
-                
-            return metrics
-        except Exception as e:
-            logger.error(f"Error getting industry metrics: {str(e)}")
-            return {}
 
     def _calculate_market_share(self, revenue: float, industry_revenue: float) -> float:
         """Calculate market share percentage"""
@@ -534,30 +539,3 @@ class AKShareCollector:
             logger.error(f"Error calculating regulatory risk: {str(e)}")
             return 50.0  # Return moderate risk on error
 
-    def _get_additional_market_data(self, symbol: str) -> Dict[str, Any]:
-        """Get additional market data from various sources"""
-        try:
-            # Try to get institutional holdings
-            inst_holdings = ak.stock_institute_hold(symbol=symbol)
-            
-            # Try to get margin trading data
-            margin_data = ak.stock_margin_detail_em(symbol=symbol)
-            
-            # Try to get short interest
-            short_data = ak.stock_a_below_cost_em(symbol=symbol)
-            
-            result = {}
-            
-            if not inst_holdings.empty:
-                result['institutional_ownership'] = self._get_field_value(inst_holdings, '机构持股比例', 0.0)
-                
-            if not margin_data.empty:
-                result['margin_ratio'] = self._get_field_value(margin_data, '融资余额占比', 0.0)
-                
-            if not short_data.empty:
-                result['short_ratio'] = self._get_field_value(short_data, '空头持仓比例', 0.0)
-                
-            return result
-        except Exception as e:
-            logger.error(f"Error getting additional market data: {str(e)}")
-            return {}

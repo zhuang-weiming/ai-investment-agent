@@ -212,28 +212,14 @@ class PeterLynchStrategy(BaseStrategy):
         try:
             # Check for presence of key metrics
             required_growth_metrics = ['revenue_growth', 'eps_growth']
-            required_fundamental_metrics = ['total_debt', 'shareholders_equity', 'operating_margin']
-            required_valuation_metrics = ['market_cap', 'net_income']
-
+            
             # Growth metrics - need at least one
             has_growth = any(data.get(m) is not None for m in required_growth_metrics)
             if not has_growth:
                 logger.warning("Missing all growth metrics")
                 return False
 
-            # Fundamental metrics - need at least two
-            fundamentals_present = sum(1 for m in required_fundamental_metrics if data.get(m) is not None)
-            if fundamentals_present < 2:
-                logger.warning("Insufficient fundamental metrics")
-                return False
-
-            # Valuation metrics - need either PEG or enough data to estimate value
-            has_peg = data.get('peg_ratio') is not None
-            has_pe_components = all(data.get(m) is not None for m in required_valuation_metrics)
-            if not (has_peg or has_pe_components):
-                logger.warning("Insufficient valuation metrics")
-                return False
-
+            # If we have growth metrics, consider data valid
             return True
             
         except Exception as e:

@@ -1,0 +1,18 @@
+# Environment
+.env
+.env.local
+
+# Build outputs
+/dist
+/build
+
+# Node modules (if applicable)
+/node_modules
+
+# Python virtual environment (if applicable)
+/venv
+/env
+
+# OS generated files
+.DS_Store
+Thumbs.db

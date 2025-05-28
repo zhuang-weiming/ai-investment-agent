@@ -34,11 +34,20 @@ Question:
 {{question}}
 
 Please provide a detailed analysis following these guidelines:
-1. Start with a summary of key metrics (price, change, market cap)
-2. Analyze the technical indicators and market sentiment
-3. Review recent news and their impact
-4. Assess risks and opportunities
-5. Provide short-term and long-term predictions
+1. Key Metrics Analysis:
+   - Current market metrics (price, market cap)
+   - Basic technical indicators (RSI, MACD, SMA)
+
+2. Technical Analysis:
+   - Price trends (SMA 50/200)
+   - Momentum indicators (RSI, MACD)
+   - Volume analysis
+
+3. Investment Recommendation:
+   - Risk assessment
+   - Growth potential
+   - Valuation analysis
+   - Time horizon considerations
 
 Format your response in a clear, structured manner.
 
