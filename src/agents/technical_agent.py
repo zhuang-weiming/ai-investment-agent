@@ -99,7 +99,7 @@ def technical_analyst_agent(state):
             technical_analysis[ticker] = {
                 "signal": "neutral",
                 "confidence": 50,
-                "reasoning": "Limited data available for analysis",
+                "reasoning": "Analysis could not be performed due to missing or insufficient data.",
                 "metrics": {}
             }
 

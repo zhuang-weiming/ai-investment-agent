@@ -216,12 +216,11 @@ Analysis:"""
         )
         
     def analyze(self, llm_response: str) -> Dict[str, Any]:
-        """Parse LLM response to extract signal, confidence, and reasoning"""
+        """Parse LLM response to extract signal and confidence only"""
         try:
             # Default values
             signal = "neutral"
             confidence = 50
-            reasoning = llm_response
             
             # Look for signal keywords
             lower_response = llm_response.lower()
@@ -251,14 +250,12 @@ Analysis:"""
             
             return {
                 "signal": signal,
-                "confidence": confidence,
-                "reasoning": reasoning
+                "confidence": confidence
             }
             
         except Exception as e:
             logger.error(f"Error parsing LLM response: {str(e)}")
             return {
                 "signal": "neutral",
-                "confidence": 0,
-                "reasoning": f"Error parsing response: {str(e)}"
+                "confidence": 0
             }

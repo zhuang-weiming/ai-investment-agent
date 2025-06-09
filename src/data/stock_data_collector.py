@@ -114,9 +114,24 @@ class StockDataCollector:
                     'low_prices': [],
                     'vix': vix
                 }
-            
+            # Stop if no price data is retrieved
+            if not result['price_data']['close_prices']:
+                logger.error(f"No price data retrieved for {symbol}. Stopping analysis.")
+                return {
+                    'symbol': symbol,
+                    'timestamp': datetime.now().isoformat(),
+                    'error': 'No price data retrieved. Analysis stopped.',
+                    'fundamental_data': {},
+                    'market_data': {},
+                    'price_data': {
+                        'close_prices': [],
+                        'volumes': [],
+                        'high_prices': [],
+                        'low_prices': [],
+                        'vix': vix
+                    }
+                }
             return result
-            
         except Exception as e:
             logger.error(f"Error collecting data for {symbol}: {str(e)}")
             # Return minimal data structure to prevent downstream errors

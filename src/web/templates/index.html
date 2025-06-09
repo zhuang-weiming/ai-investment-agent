@@ -83,10 +83,6 @@
                             <p id="peter_lynch_confidence" class="text-lg font-medium"></p>
                         </div>
                     </div>
-                    <div>
-                        <span class="text-sm text-gray-600">Reasoning</span>
-                        <p id="peter_lynch_reasoning" class="mt-1 text-gray-800"></p>
-                    </div>
                 </div>
                 
                 <!-- Warren Buffett Strategy -->
@@ -102,10 +98,6 @@
                             <p id="warren_buffett_confidence" class="text-lg font-medium"></p>
                         </div>
                     </div>
-                    <div>
-                        <span class="text-sm text-gray-600">Reasoning</span>
-                        <p id="warren_buffett_reasoning" class="mt-1 text-gray-800"></p>
-                    </div>
                 </div>
                 
                 <!-- Technical Analysis -->
@@ -120,10 +112,6 @@
                             <span class="text-sm text-gray-600">Confidence</span>
                             <p id="technical_confidence" class="text-lg font-medium"></p>
                         </div>
-                    </div>
-                    <div>
-                        <span class="text-sm text-gray-600">Reasoning</span>
-                        <p id="technical_reasoning" class="mt-1 text-gray-800"></p>
                     </div>
                 </div>
             </div>
@@ -174,7 +162,6 @@
                     for (const [strategy, result] of Object.entries(data.analysis)) {
                         document.getElementById(`${strategy}_signal`).textContent = result.signal;
                         document.getElementById(`${strategy}_confidence`).textContent = result.confidence;
-                        document.getElementById(`${strategy}_reasoning`).textContent = result.reasoning;
                     }
                     
                     results.style.display = 'block';

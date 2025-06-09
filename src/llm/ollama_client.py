@@ -15,7 +15,7 @@ Financials: {financials}
 News: {news}
 Insider Trades: {insider}
 Market Cap: {market_cap}
-Give a bullish, neutral, or bearish signal with confidence (0-100) and reasoning.
+Give a bullish, neutral, or bearish signal with confidence (0-100).
 """
 
     def analyze(self, prompt):
