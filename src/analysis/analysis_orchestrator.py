@@ -1,10 +1,10 @@
 from typing import Dict, Any, List
 import asyncio
 import logging
-from ..models.stock_data_collector import StockDataCollector
-from ..strategies.peter_lynch import PeterLynchStrategy
-from ..strategies.warren_buffett import WarrenBuffettStrategy
-from ..strategies.technical import TechnicalStrategy
+from src.data.stock_data_collector import StockDataCollector
+from src.agents.peter_lynch_agent import PeterLynchAgent
+from src.agents.warren_buffett_agent import warren_buffett_agent
+from src.agents.technical_agent import technical_analyst_agent
 
 logger = logging.getLogger(__name__)
 
@@ -14,9 +14,9 @@ class StockAnalysisOrchestrator:
     def __init__(self):
         self.data_collector = StockDataCollector()
         self.strategies = {
-            'peter_lynch': PeterLynchStrategy(),
-            'warren_buffett': WarrenBuffettStrategy(),
-            'technical': TechnicalStrategy()
+            'peter_lynch': PeterLynchAgent(),
+            'warren_buffett': lambda data: warren_buffett_agent({'data': {**data, 'tickers': [data['symbol']]}, 'messages': []}),
+            'technical': lambda data: technical_analyst_agent({'data': {**data, 'tickers': [data['symbol']]}, 'messages': []})
         }
     
     async def analyze_stock(self, symbol: str, vix: float) -> Dict[str, Any]:
@@ -54,76 +54,26 @@ class StockAnalysisOrchestrator:
     
     async def _run_strategy(self, name: str, strategy: Any, data: Dict[str, Any]) -> Dict[str, Any]:
         try:
-            # Check if the strategy is TechnicalStrategy and prepare data accordingly
-            if isinstance(strategy, TechnicalStrategy):
-                # Extract technical data from the dictionary and create TechnicalIndicators object
-                # Only include parameters that TechnicalIndicators accepts
-                price_data = data.get('price_data', {})
-                
-                # Ensure we have the required data, even if empty
-                if not price_data:
-                    logger.warning(f"No price data available for technical analysis, using default values")
-                    price_data = {
-                        'close_prices': [95.0, 96.0, 97.0, 98.0, 99.0, 100.0, 101.0, 102.0, 103.0, 104.0],
-                        'volumes': [900000, 950000, 920000, 930000, 940000, 950000, 960000, 970000, 980000, 990000],
-                        'high_prices': [101.0, 102.0, 103.0, 104.0, 105.0, 106.0, 107.0, 108.0, 109.0, 110.0],
-                        'low_prices': [89.0, 90.0, 91.0, 92.0, 93.0, 94.0, 95.0, 96.0, 97.0, 98.0],
-                        'vix': data.get('vix', 15.0)
-                    }
-                
-                technical_indicators_data = {
-                    'close_prices': price_data.get('close_prices', []),
-                    'volumes': price_data.get('volumes', []),
-                    'high_prices': price_data.get('high_prices', []),
-                    'low_prices': price_data.get('low_prices', []),
-                    'vix': price_data.get('vix', data.get('vix', 15.0)),
-                    'index_correlation': data.get('index_correlation', 0.0),
-                    'sector_rs': data.get('sector_rs', 0.0),
-                    'implied_volatility': data.get('implied_volatility', 0.0),
-                    'volume_profile': price_data.get('volume_profile', {}),
-                    'market_breadth': data.get('market_breadth', 0.0)
+            if name == 'peter_lynch':
+                result = await asyncio.to_thread(strategy.analyze, data['symbol'])
+                return {
+                    'signal': result.get('signal', 'neutral'),
+                    'confidence': result.get('confidence', 50),
+                    'reasoning': result.get('reasoning', ''),
+                    'raw_data': result
                 }
-                
-                # Ensure we have at least some data for analysis
-                if not technical_indicators_data['close_prices'] or len(technical_indicators_data['close_prices']) < 1:
-                    logger.warning("No close prices available for technical analysis, using default values")
-                    technical_indicators_data['close_prices'] = [95.0, 96.0, 97.0, 98.0, 99.0, 100.0, 101.0, 102.0, 103.0, 104.0, 105.0, 106.0, 107.0, 108.0]
-                    
-                if not technical_indicators_data['volumes'] or len(technical_indicators_data['volumes']) < 1:
-                    logger.warning("No volume data available for technical analysis, using default values")
-                    technical_indicators_data['volumes'] = [900000, 950000, 920000, 930000, 940000, 950000, 960000, 970000, 980000, 990000, 1000000, 1010000, 1020000, 1030000]
-                    
-                if not technical_indicators_data['high_prices'] or len(technical_indicators_data['high_prices']) < 1:
-                    logger.warning("No high prices available for technical analysis, using default values")
-                    technical_indicators_data['high_prices'] = [101.0, 102.0, 103.0, 104.0, 105.0, 106.0, 107.0, 108.0, 109.0, 110.0, 111.0, 112.0, 113.0, 114.0]
-                    
-                if not technical_indicators_data['low_prices'] or len(technical_indicators_data['low_prices']) < 1:
-                    logger.warning("No low prices available for technical analysis, using default values")
-                    technical_indicators_data['low_prices'] = [89.0, 90.0, 91.0, 92.0, 93.0, 94.0, 95.0, 96.0, 97.0, 98.0, 99.0, 100.0, 101.0, 102.0]
-                
-                # Import TechnicalIndicators if not already imported
-                from ..strategies.technical import TechnicalIndicators
-                try:
-                    indicators_object = TechnicalIndicators(**technical_indicators_data)
-                    result = await strategy.analyze(indicators_object)
-                except Exception as e:
-                    logger.error(f"Error creating TechnicalIndicators object: {str(e)}")
-                    return {
-                        'signal': 'neutral',
-                        'confidence': 30.0,
-                        'reasoning': f'Strategy failed: {str(e)}',
-                        'raw_data': None
-                    }
             else:
-                # For other strategies, pass the raw data dictionary
-                result = await strategy.analyze(data)
-    
-            return {
-                'signal': result.signal,
-                'confidence': result.confidence,
-                'reasoning': result.reasoning,
-                'raw_data': result.raw_data
-            }
+                result = await asyncio.to_thread(strategy, data)
+                # Extract the first ticker's result for compatibility
+                signals = result['data']['analyst_signals'][f'{name}_agent' if name == 'technical' else 'warren_buffett_agent']
+                ticker = data['symbol'] if 'symbol' in data else next(iter(signals))
+                ticker_result = signals[ticker]
+                return {
+                    'signal': ticker_result.get('signal', 'neutral'),
+                    'confidence': ticker_result.get('confidence', 50),
+                    'reasoning': ticker_result.get('reasoning', ''),
+                    'raw_data': ticker_result
+                }
         except Exception as e:
             logger.error(f"Error running {name} strategy: {str(e)}")
             return {

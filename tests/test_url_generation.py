@@ -1,6 +1,6 @@
 """Test URL generation for different stock symbols"""
 import pytest
-from src.models.stock_data_collector import StockDataCollector
+from src.data.stock_data_collector import StockDataCollector
 from tests.conftest import TEST_STOCK_SYMBOLS, EXPECTED_URL_PATTERNS
 
 @pytest.mark.asyncio

@@ -1,9 +1,6 @@
 import pytest
 from src.analysis.analysis_orchestrator import StockAnalysisOrchestrator
-from src.models.stock_data_collector import StockDataCollector
-from src.strategies.peter_lynch import PeterLynchStrategy
-from src.strategies.warren_buffett import WarrenBuffettStrategy
-from src.strategies.technical import TechnicalStrategy
+from src.data.stock_data_collector import StockDataCollector
 import asyncio
 from typing import Dict, Any, List
 from datetime import datetime

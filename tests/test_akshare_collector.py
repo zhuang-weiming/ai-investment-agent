@@ -1,7 +1,7 @@
 import pytest
 import pandas as pd
 import numpy as np
-from src.models.akshare_collector import AKShareCollector
+from src.data.akshare_collector import AKShareCollector
 
 @pytest.fixture
 def collector():

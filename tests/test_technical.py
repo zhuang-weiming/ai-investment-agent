@@ -1,113 +1,88 @@
 import pytest
 import pandas as pd
 import numpy as np
-from src.strategies.technical import TechnicalStrategy, TechnicalIndicators
-from src.strategies.base_strategy import AnalysisResult
+from src.agents.technical_agent import technical_analyst_agent
 
-@pytest.fixture
-def sample_technical_data():
-    # Generate sample price data with an upward trend
-    n_points = 200
-    base_prices = np.linspace(100, 150, n_points)  # Upward trend
-    # Add some noise to prices
-    close_prices = base_prices + np.random.normal(0, 2, n_points)
-    high_prices = close_prices + np.random.uniform(0, 2, n_points)
-    low_prices = close_prices - np.random.uniform(0, 2, n_points)
-    volumes = np.random.randint(1000000, 2000000, n_points)
-    
-    return TechnicalIndicators(
-        close_prices=close_prices.tolist(),
-        volumes=volumes.tolist(),
-        high_prices=high_prices.tolist(),
-        low_prices=low_prices.tolist(),
-        vix=20.5,  # Moderate market volatility
-        index_correlation=0.75,
-        sector_rs=1.2,
-        implied_volatility=25.0
-    )
+class DummyState(dict):
+    pass
 
-def test_technical_indicators_validation():
-    # Test with valid data
-    valid_data = {
-        'close_prices': [1.0, 2.0, 3.0, 4.0, 5.0],
-        'volumes': [100, 200, 300, 400, 500],
-        'high_prices': [1.1, 2.2, 3.3, 4.4, 5.5],
-        'low_prices': [0.9, 1.8, 2.7, 3.6, 4.5],
-        'vix': 15.0
+def test_technical_analyst_agent_basic():
+    state = DummyState({
+        "data": {
+            "start_date": "2024-01-01",
+            "end_date": "2024-12-31",
+            "tickers": ["600519"],
+            "analyst_signals": {},
+        },
+        "messages": [],
+    })
+    result = technical_analyst_agent(state)
+    assert "messages" in result
+    assert "data" in result
+    assert "technical_analyst_agent" in result["data"]["analyst_signals"]
+    ticker_result = result["data"]["analyst_signals"]["technical_analyst_agent"]["600519"]
+    assert ticker_result["signal"] in ["bullish", "bearish", "neutral"]
+    assert 0 <= ticker_result["confidence"] <= 100
+
+def test_technical_agent_with_akshare_data():
+    # Create sample data in AKShare format
+    hist_data = pd.DataFrame({
+        "日期": pd.date_range(start="2024-01-01", periods=120, freq="D").strftime("%Y-%m-%d"),
+        "开盘": np.random.uniform(50, 55, 120),
+        "最高": np.random.uniform(54, 58, 120),
+        "最低": np.random.uniform(48, 52, 120),
+        "收盘": np.random.uniform(51, 56, 120),
+        "成交量": np.random.uniform(200000, 500000, 120),
+        "成交额": np.random.uniform(1e7, 2e7, 120),
+        "振幅": np.random.uniform(1, 3, 120),
+        "涨跌幅": np.random.uniform(-2, 2, 120),
+        "涨跌额": np.random.uniform(-1, 1, 120),
+        "换手率": np.random.uniform(0.5, 1.5, 120)
+    })
+
+    market_data = pd.Series({
+        "最新价": 53.5,
+        "涨跌幅": 1.2,
+        "成交量": 300000,
+        "换手率": 0.8,
+        "市盈率-动态": 15.5,
+        "市净率": 2.1
+    })
+
+    # Create state with AKShare format data
+    state = {
+        "data": {
+            "tickers": ["000333.SZ"],
+            "hist_data": hist_data,
+            "market_data": market_data,
+            "analyst_signals": {}
+        },
+        "messages": []
     }
-    
-    indicators = TechnicalIndicators(**valid_data)
-    assert len(indicators.close_prices) == 5
-    assert indicators.vix == 15.0
 
-    # Test with inconsistent data lengths
-    with pytest.raises(ValueError):
-        invalid_data = valid_data.copy()
-        invalid_data['volumes'] = [100, 200, 300]  # Wrong length
-        TechnicalIndicators(**invalid_data)
-
-def test_macd_calculation(sample_technical_data):
-    strategy = TechnicalStrategy()
-    prices = np.array(sample_technical_data.close_prices)
-    macd_data = strategy.calculate_macd(prices)
+    # Run technical analysis
+    result = technical_analyst_agent(state)
     
-    assert 'macd' in macd_data
-    assert 'signal' in macd_data
-    assert 'histogram' in macd_data
-    assert len(macd_data['macd']) == len(prices)
-
-def test_rsi_calculation(sample_technical_data):
-    strategy = TechnicalStrategy()
-    prices = np.array(sample_technical_data.close_prices)
-    rsi = strategy.calculate_rsi(prices)
+    # Verify structure and content
+    assert "data" in result
+    assert "messages" in result
+    assert len(result["messages"]) > 0
     
-    assert len(rsi) == len(prices)
-    assert all(0 <= val <= 100 for val in rsi)  # RSI should be between 0 and 100
-
-def test_trend_signals(sample_technical_data):
-    strategy = TechnicalStrategy()
-    trend_data = strategy.calculate_trend_signals(sample_technical_data)
+    signals = result["data"]["analyst_signals"]["technical_analyst_agent"]
+    assert "000333.SZ" in signals
     
-    assert isinstance(trend_data, dict)
-    assert 'signal' in trend_data
-    assert trend_data['signal'] in ['bullish', 'bearish', 'neutral']
-    assert 0 <= trend_data['confidence'] <= 100
-    assert trend_data['strength'] in ['strong', 'medium', 'weak']
-    assert 'metrics' in trend_data
-
-def test_momentum_signals(sample_technical_data):
-    strategy = TechnicalStrategy()
-    momentum_data = strategy.calculate_momentum_signals(sample_technical_data)
+    analysis = signals["000333.SZ"]
+    assert "signal" in analysis
+    assert analysis["signal"] in ["bullish", "bearish", "neutral"]
+    assert "confidence" in analysis
+    assert 0 <= analysis["confidence"] <= 100
+    assert "reasoning" in analysis
+    assert "metrics" in analysis
     
-    assert isinstance(momentum_data, dict)
-    assert 'signal' in momentum_data
-    assert momentum_data['signal'] in ['bullish', 'bearish', 'neutral']
-    assert 0 <= momentum_data['confidence'] <= 100
-    assert 'metrics' in momentum_data
-
-@pytest.mark.asyncio
-async def test_analyze_technical_strategy(sample_technical_data):
-    strategy = TechnicalStrategy()
-    analysis_result = await strategy.analyze(sample_technical_data)
-    assert isinstance(analysis_result, AnalysisResult)
-    assert hasattr(analysis_result, 'signal')
-    assert analysis_result.signal in ['bullish', 'bearish', 'neutral']
-    assert hasattr(analysis_result, 'confidence')
-    assert 0 <= analysis_result.confidence <= 100
-    assert hasattr(analysis_result, 'reasoning')
-    assert isinstance(analysis_result.reasoning, str)
-    assert len(analysis_result.reasoning) > 0 # Check that reasoning is not empty
-    
-    assert 'details' in analysis_result
-    assert isinstance(analysis_result['details'], dict)
-    assert 'trend' in analysis_result['details']
-    assert 'momentum' in analysis_result['details']
-    assert 'volume' in analysis_result['details']
-    
-    # Example: Check for specific keywords in reasoning if certain conditions are met
-    # This would depend on the sample_technical_data provided
-    # For instance, if sample_technical_data is expected to be bullish:
-    # if analysis_result['signal'] == 'bullish':
-    #     assert "upward momentum" in analysis_result['reasoning'].lower()
-    #     assert "strengthening bullish momentum" in analysis_result['reasoning'].lower() 
-    #     assert "supporting price movements" in analysis_result['reasoning'].lower()
+    metrics = analysis["metrics"]
+    assert "rsi" in metrics
+    assert "trend" in metrics
+    assert "momentum" in metrics
+    assert "price" in metrics
+    assert "volume" in metrics
+    assert "turnover" in metrics

@@ -115,3 +115,96 @@ Analysis:"""
         except Exception as e:
             logger.error(f"Error during analysis: {str(e)}")
             return f"Error analyzing stock data: {str(e)}"
+    
+    def build_peter_lynch_prompt(self, financials: List[Dict], news: List[Dict], 
+                              insider: List[Dict], market_cap: float) -> str:
+        """Build prompt for Peter Lynch style analysis
+        
+        Focuses on:
+        - Company growth rate
+        - PEG ratio
+        - Future earnings potential
+        - Insider activity
+        - Market sentiment
+        """
+        system_prompt = """You are Peter Lynch, the legendary fund manager known for investing in companies 
+        with good stories and strong fundamentals. Analyze this stock using your investment philosophy:
+
+        1. Growth at a Reasonable Price (GARP)
+        2. Focus on companies you understand
+        3. Look for fast-growing companies in slow-growing industries
+        4. Strong balance sheets
+        5. Consider insider buying/selling
+        """
+
+        context = {
+            "financials": financials,
+            "news": news,
+            "insider_trades": insider,
+            "market_cap": market_cap
+        }
+
+        question = """Based on the available data, provide an investment analysis considering:
+        1. Growth rate vs. industry average
+        2. PEG ratio analysis
+        3. Management quality and insider activity
+        4. Company narrative and market position
+        5. Overall investment recommendation
+        """
+
+        return self.create_analysis_chain(system_prompt).run(
+            context=json.dumps(context, indent=2),
+            question=question
+        )
+
+    def build_technical_prompt(self, technical_data: Dict) -> str:
+        """Build prompt for technical analysis"""
+        system_prompt = """You are a technical analyst focusing on price action, trends, 
+        and momentum indicators. Analyze the technical signals in this data."""
+
+        context = {"technical_data": technical_data}
+
+        question = """Based on the technical indicators, provide:
+        1. Trend analysis (using moving averages)
+        2. Momentum analysis (RSI, MACD)
+        3. Volume analysis
+        4. Support/resistance levels
+        5. Trading recommendation
+        """
+
+        return self.create_analysis_chain(system_prompt).run(
+            context=json.dumps(context, indent=2),
+            question=question
+        )
+
+    def build_warren_buffett_prompt(self, financials: List[Dict], moat_analysis: Dict,
+                                  competitive_analysis: Dict) -> str:
+        """Build prompt for Warren Buffett style analysis"""
+        system_prompt = """You are Warren Buffett, focusing on companies with strong competitive 
+        advantages and long-term value. Analyze this company using your investment principles:
+
+        1. Strong economic moat
+        2. Consistent earnings power
+        3. High return on equity
+        4. Low debt
+        5. Simple, understandable business
+        """
+
+        context = {
+            "financials": financials,
+            "moat_analysis": moat_analysis,
+            "competitive_analysis": competitive_analysis
+        }
+
+        question = """Based on the available data, provide an investment analysis considering:
+        1. Economic moat strength
+        2. Financial strength and stability
+        3. Management quality and capital allocation
+        4. Intrinsic value estimation
+        5. Long-term investment potential
+        """
+
+        return self.create_analysis_chain(system_prompt).run(
+            context=json.dumps(context, indent=2),
+            question=question
+        )
