@@ -1,10 +1,11 @@
 # Ollama Qwen3 14B LLM client
 import requests
+from src.config import MODEL_CONFIG
 
 class OllamaQwenAnalyzer:
-    def __init__(self, base_url='http://localhost:11434', model='qwen:14b'):
+    def __init__(self, base_url='http://localhost:11434', model=None):
         self.base_url = base_url
-        self.model = model
+        self.model = model or MODEL_CONFIG["name"]
 
     def build_peter_lynch_prompt(self, financials, news, insider, market_cap):
         # Compose a prompt for the LLM based on the Peter Lynch strategy

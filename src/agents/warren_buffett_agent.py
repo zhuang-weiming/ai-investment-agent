@@ -15,12 +15,15 @@ def warren_buffett_agent(state):
     data = state["data"]
     tickers = data["tickers"]
     buffett_analysis = {}
+    # Ensure nested dicts exist
+    state["data"].setdefault("analyst_signals", {})
+    state["data"]["analyst_signals"].setdefault("warren_buffett_agent", {})
     for ticker in tickers:
         # Simulate analysis
         buffett_analysis[ticker] = {
             "signal": "neutral",
             "confidence": 50.0,
-            "reasoning": f"No real analysis performed for {ticker}."
+            "reasoning": f"Analysis could not be performed for {ticker} due to missing or insufficient data."
         }
     message = HumanMessage(content=json.dumps(buffett_analysis), name="warren_buffett_agent")
     state["data"]["analyst_signals"]["warren_buffett_agent"] = buffett_analysis

@@ -184,13 +184,15 @@ TEST_STOCK_SYMBOLS = {
     'hk': '0700.HK'       # Tencent Holdings
 }
 
-# Expected URL patterns
+# Expected URL patterns for different data types
+# Note: We no longer use Yahoo Finance URLs, but keeping this structure for test compatibility
+# These are now EastMoney URLs for China stocks
 EXPECTED_URL_PATTERNS = {
-    'quote': "https://finance.yahoo.com/quote/{symbol}",
-    'stats': "https://finance.yahoo.com/quote/{symbol}/key-statistics",
-    'financials': "https://finance.yahoo.com/quote/{symbol}/financials",
-    'analysis': "https://finance.yahoo.com/quote/{symbol}/analysis",
-    'holders': "https://finance.yahoo.com/quote/{symbol}/holders"
+    'quote': "http://quote.eastmoney.com/{market}{code}.html",
+    'stats': "http://emweb.securities.eastmoney.com/PC_HSF10/OperationsRequired/Index?type=web&code={market}{code}",
+    'financials': "http://emweb.securities.eastmoney.com/PC_HSF10/NewFinanceAnalysis/Index?type=web&code={market}{code}",
+    'analysis': "http://emweb.securities.eastmoney.com/PC_HSF10/ProfitForecast/Index?code={market}{code}",
+    'holders': "http://emweb.securities.eastmoney.com/PC_HSF10/ShareholderResearch/Index?code={market}{code}"
 }
 
 @pytest_asyncio.fixture

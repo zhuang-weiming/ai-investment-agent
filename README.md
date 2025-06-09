@@ -1,6 +1,6 @@
 # AI Investment Agent
 
-A modular, agent-based stock analysis tool that collects data from AKShare and provides multi-strategy investment opinions using a local LLM (Qwen3 14B via Ollama on macOS).
+A modular, agent-based stock analysis tool that collects data from AKShare and provides multi-strategy investment opinions using a local LLM (Qwen3 14B in no-thinking mode via Ollama on macOS).
 
 ## Features
 - **Data Collection:** Fetches real-time and historical stock data from AKShare.
@@ -62,6 +62,8 @@ A modular, agent-based stock analysis tool that collects data from AKShare and p
 - Python 3.10+
 - macOS (for local Ollama LLM integration)
 - [Ollama](https://ollama.com/) with Qwen3 14B model installed and running
+  - The project uses a custom model `qwen3-nothink:14b` that disables the thinking mode
+  - See the Usage section for how to set up and run this model
 - See `requirements.txt` for Python dependencies
 
 ## Installation
@@ -76,9 +78,9 @@ pip install -r requirements.txt
 
 ## Usage
 ### Running the Web Application
-1. **Start Ollama with Qwen3 14B:**
+1. **Start Ollama with Qwen3 14B (no thinking mode):**
    ```sh
-   ollama run qwen3:14b
+   ollama run qwen3-nothink:14b
    ```
 2. **Run the web application:
    ```sh
@@ -90,9 +92,9 @@ pip install -r requirements.txt
    Enter a stock code (e.g., 000333.SZ) in the web interface to receive three sets of expert opinions.
 
 ### Using the Command Line Interface
-1. **Start Ollama with Qwen3 14B:**
+1. **Start Ollama with Qwen3 14B (no thinking mode):**
    ```sh
-   ollama run qwen3:14b
+   ollama run qwen3-nothink:14b
    ```
 2. **Run the analysis tool:
    ```sh

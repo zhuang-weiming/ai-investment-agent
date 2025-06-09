@@ -30,7 +30,9 @@ def technical_analyst_agent(state):
     data = state["data"]
     tickers = data["tickers"]
     technical_analysis = {}
-
+    # Ensure nested dicts exist
+    state["data"].setdefault("analyst_signals", {})
+    state["data"]["analyst_signals"].setdefault("technical_analyst_agent", {})
     for ticker in tickers:
         prices_df = None
         market_data = None

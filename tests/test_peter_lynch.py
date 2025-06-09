@@ -1,5 +1,10 @@
 import pytest
+import typing
 from src.agents.peter_lynch_agent import PeterLynchAgent
+
+# Define Any and Dict for compatibility
+Any = typing.Any
+Dict = typing.Dict
 
 def test_peter_lynch_agent_basic():
     agent = PeterLynchAgent()

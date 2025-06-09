@@ -134,6 +134,56 @@ class AKShareCollector:
                     
         return True
 
+    def get_financial_data(self, symbol: str) -> Dict[str, Any]:
+        """Get financial metrics for a stock
+        
+        Returns normalized dictionary with financial metrics:
+            - pe_ratio: Price to earnings ratio
+            - pb_ratio: Price to book ratio
+            - roe: Return on equity
+            - revenue_growth: Year-over-year revenue growth
+            - eps_growth: Year-over-year EPS growth
+            - profit_margin: Profit margin
+            - debt_ratio: Debt to assets ratio
+            - dividend_yield: Dividend yield
+        """
+        try:
+            code = self._validate_symbol(symbol)
+            self._rate_limit()
+            
+            # Get main financial indicators
+            df = self._retry_api_call(ak.stock_financial_analysis_indicator, symbol=code)
+            if df is None or df.empty:
+                logger.warning(f"No financial data found for {symbol}")
+                return {}
+                
+            # Normalize column names
+            df = self._normalize_chinese_cols(df, ['净资产收益率(%)', '营业收入同比增长率(%)', 
+                                                '每股收益同比增长率(%)', '销售毛利率(%)', 
+                                                '资产负债率(%)', '市盈率', '市净率', '股息率(%)'])
+            
+            # Get latest row (most recent quarter)
+            latest = df.iloc[0].to_dict() if not df.empty else {}
+            
+            # Normalize to standard field names
+            return {
+                'pe_ratio': float(latest.get('市盈率', 0)),
+                'pb_ratio': float(latest.get('市净率', 0)),
+                'roe': float(latest.get('净资产收益率(%)', 0)),
+                'revenue_growth': float(latest.get('营业收入同比增长率(%)', 0)),
+                'eps_growth': float(latest.get('每股收益同比增长率(%)', 0)),
+                'profit_margin': float(latest.get('销售毛利率(%)', 0)),
+                'debt_ratio': float(latest.get('资产负债率(%)', 0)),
+                'dividend_yield': float(latest.get('股息率(%)', 0))
+            }
+            
+        except ValueError as e:
+            logger.error(str(e))
+            return {}
+        except Exception as e:
+            logger.error(f"Error fetching financial data for {symbol}: {str(e)}")
+            return {}
+    
     def get_market_data(self, symbol: str) -> Dict[str, Any]:
         """Get real-time market data for a stock
         

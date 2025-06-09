@@ -3,16 +3,17 @@ import asyncio
 import logging
 from src.scrapers.web_scraper import WebScraper
 from src.llm.stock_analyzer import StockAnalyzer
+from src.config import MODEL_CONFIG
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class StockAnalysisService:
-    def __init__(self, urls: List[str], system_prompt: str, model_name: str = "qwen3:14b"):
+    def __init__(self, urls: List[str], system_prompt: str, model_name: str = None):
         self.urls = urls
         self.system_prompt = system_prompt
         self.scraper = WebScraper()
-        self.analyzer = StockAnalyzer(model_name=model_name)
+        self.analyzer = StockAnalyzer(model_name=model_name or MODEL_CONFIG["name"])
         
     async def run_analysis(self, question: str) -> str:
         """Run the complete analysis pipeline"""

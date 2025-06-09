@@ -1,10 +1,15 @@
-from typing import Dict, Any, List
+import typing
 import asyncio
 import logging
 from src.data.stock_data_collector import StockDataCollector
 from src.agents.peter_lynch_agent import PeterLynchAgent
 from src.agents.warren_buffett_agent import warren_buffett_agent
 from src.agents.technical_agent import technical_analyst_agent
+
+# Define typing aliases
+Dict = typing.Dict
+Any = typing.Any
+List = typing.List
 
 logger = logging.getLogger(__name__)
 

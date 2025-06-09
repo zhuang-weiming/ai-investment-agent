@@ -7,9 +7,9 @@ from flask import Flask, render_template, request, jsonify
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 from src.analysis.analysis_orchestrator import StockAnalysisOrchestrator
-from src.strategies.technical import TechnicalStrategy
-from src.strategies.peter_lynch import PeterLynchStrategy
-from src.strategies.warren_buffett import WarrenBuffettStrategy
+from src.agents.technical_agent import technical_analyst_agent
+from src.agents.peter_lynch_agent import PeterLynchAgent
+from src.agents.warren_buffett_agent import warren_buffett_agent
 import asyncio
 import logging
 

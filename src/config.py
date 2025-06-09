@@ -31,7 +31,7 @@ STOCK_URLS: Dict[str, List[str]] = {
 
 # LLM Model Configuration
 MODEL_CONFIG = {
-    "name": "qwen3:14b",  # Updated to match your local model name
+    "name": "qwen3-nothink:14b",  # Model with thinking mode disabled
     "temperature": 0.7,
     "max_tokens": 32000,
 }

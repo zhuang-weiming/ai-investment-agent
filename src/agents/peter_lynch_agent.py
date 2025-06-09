@@ -1,17 +1,19 @@
 # Agent for Peter Lynch strategy using LLM and data collectors
 
-from typing import Any, Dict
+import typing
 from src.data.eastmoney_collector import EastmoneyCollector
 from src.data.akshare_collector import AKShareCollector
 from src.llm.stock_analyzer import StockAnalyzer
+from src.config import MODEL_CONFIG
 
 class PeterLynchAgent:
     def __init__(self):
         self.eastmoney_collector = EastmoneyCollector()
         self.ak_collector = AKShareCollector()
-        self.llm = StockAnalyzer(model_name="qwen:14b")
+        # Force no_think mode by explicitly setting the model name
+        self.llm = StockAnalyzer(model_name="qwen3-nothink:14b")
 
-    def analyze(self, symbol: str) -> Dict[str, Any]:
+    def analyze(self, symbol: str) -> typing.Dict[str, typing.Any]:
         # 1. Collect data from Eastmoney (China market focus)
         financials = self.eastmoney_collector.get_financials(symbol)
         news = self.eastmoney_collector.get_news(symbol)

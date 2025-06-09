@@ -2,8 +2,13 @@ import pytest
 from src.analysis.analysis_orchestrator import StockAnalysisOrchestrator
 from src.data.stock_data_collector import StockDataCollector
 import asyncio
-from typing import Dict, Any, List
+import typing
 from datetime import datetime
+
+# Define typing aliases
+Dict = typing.Dict
+Any = typing.Any
+List = typing.List
 
 class MockStockDataCollector(StockDataCollector):
     """Mock data collector for testing"""

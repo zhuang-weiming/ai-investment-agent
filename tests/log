@@ -1,0 +1,392 @@
+(venv) ➜  ai-investment-agent git:(main) ✗ pip3 install qstock
+Collecting qstock
+ERROR: Exception:
+Traceback (most recent call last):
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_internal/cli/base_command.py", line 105, in _run_wrapper
+    status = _inner_run()
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_internal/cli/base_command.py", line 96, in _inner_run
+    return self.run(options, args)
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_internal/cli/req_command.py", line 68, in wrapper
+    return func(self, options, args)
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_internal/commands/install.py", line 387, in run
+    requirement_set = resolver.resolve(
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_internal/resolution/resolvelib/resolver.py", line 96, in resolve
+    result = self._result = resolver.resolve(
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_vendor/resolvelib/resolvers/resolution.py", line 515, in resolve
+    state = resolution.resolve(requirements, max_rounds=max_rounds)
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_vendor/resolvelib/resolvers/resolution.py", line 388, in resolve
+    self._add_to_criteria(self.state.criteria, r, parent=None)
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_vendor/resolvelib/resolvers/resolution.py", line 141, in _add_to_criteria
+    if not criterion.candidates:
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_vendor/resolvelib/structs.py", line 194, in __bool__
+    return bool(self._sequence)
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_internal/resolution/resolvelib/found_candidates.py", line 163, in __bool__
+    self._bool = any(self)
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_internal/resolution/resolvelib/found_candidates.py", line 147, in <genexpr>
+    return (c for c in iterator if id(c) not in self._incompatible_ids)
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_internal/resolution/resolvelib/found_candidates.py", line 37, in _iter_built
+    candidate = func()
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_internal/resolution/resolvelib/factory.py", line 187, in _make_candidate_from_link
+    base: Optional[BaseCandidate] = self._make_base_candidate_from_link(
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_internal/resolution/resolvelib/factory.py", line 233, in _make_base_candidate_from_link
+    self._link_candidate_cache[link] = LinkCandidate(
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_internal/resolution/resolvelib/candidates.py", line 306, in __init__
+    super().__init__(
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_internal/resolution/resolvelib/candidates.py", line 159, in __init__
+    self.dist = self._prepare()
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_internal/resolution/resolvelib/candidates.py", line 236, in _prepare
+    dist = self._prepare_distribution()
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_internal/resolution/resolvelib/candidates.py", line 317, in _prepare_distribution
+    return preparer.prepare_linked_requirement(self._ireq, parallel_builds=True)
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_internal/operations/prepare.py", line 526, in prepare_linked_requirement
+    metadata_dist = self._fetch_metadata_only(req)
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_internal/operations/prepare.py", line 378, in _fetch_metadata_only
+    return self._fetch_metadata_using_link_data_attr(
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_internal/operations/prepare.py", line 398, in _fetch_metadata_using_link_data_attr
+    metadata_file = get_http_url(
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_internal/operations/prepare.py", line 115, in get_http_url
+    from_path, content_type = download(link, temp_dir.path)
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_internal/network/download.py", line 174, in __call__
+    resp = _http_get_download(self._session, link)
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_internal/network/download.py", line 149, in _http_get_download
+    resp = session.get(target_url, headers=headers, stream=True)
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_vendor/requests/sessions.py", line 602, in get
+    return self.request("GET", url, **kwargs)
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_internal/network/session.py", line 523, in request
+    return super().request(method, url, *args, **kwargs)
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_vendor/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_vendor/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_vendor/cachecontrol/adapter.py", line 77, in send
+    resp = super().send(request, stream, timeout, verify, cert, proxies)
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_vendor/requests/adapters.py", line 667, in send
+    resp = conn.urlopen(
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_vendor/urllib3/connectionpool.py", line 713, in urlopen
+    self._prepare_proxy(conn)
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_vendor/urllib3/connectionpool.py", line 1015, in _prepare_proxy
+    conn.connect()
+  File "/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/pip/_vendor/urllib3/connection.py", line 462, in connect
+    if not cert.get("subjectAltName", ()):
+AttributeError: 'NoneType' object has no attribute 'get'
+(venv) ➜  ai-investment-agent git:(main) ✗ pip3 install requests
+Requirement already satisfied: requests in /Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages (2.31.0)
+Requirement already satisfied: charset-normalizer<4,>=2 in /Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages (from requests) (3.4.1)
+Requirement already satisfied: idna<4,>=2.5 in /Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages (from requests) (3.10)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages (from requests) (2.3.0)
+Requirement already satisfied: certifi>=2017.4.17 in /Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages (from requests) (2025.1.31)
+(venv) ➜  ai-investment-agent git:(main) ✗ python3 -c "from src.data.eastmoney_collector import EastmoneyCollector; collector = EastmoneyCollector(); print(collector._validate_symbol('000333.SZ')); print('Test successful\!')"
+{'code': '000333', 'market': 'sz'}
+Test successful!
+(venv) ➜  ai-investment-agent git:(main) ✗ python3 -c "from src.data.eastmoney_collector import EastmoneyCollector; collector = EastmoneyCollector(); print('Testing get_financials:'); result = collector.get_financials('000333.SZ'); print(f'Got {len(result)} financial records'); print(result[0] if result else 'No data')"
+Testing get_financials:
+Got 9 financial records
+{'report_date': '2025-03-31 00:00:00', 'revenue': 0, 'net_profit': 0, 'eps': 0, 'roe': 0, 'debt_ratio': 0, 'profit_margin': 0}
+(venv) ➜  ai-investment-agent git:(main) ✗ python3 -c "from src.data.eastmoney_collector import EastmoneyCollector; collector = EastmoneyCollector(); print('Testing get_news:'); result = collector.get_news('000333.SZ'); print(f'Got {len(result)} news items'); print(result[0] if result else 'No data')"
+Testing get_news:
+API call failed, retrying in 0.5s: Expecting value: line 1 column 1 (char 0)
+API call failed, retrying in 1.0s: Expecting value: line 1 column 1 (char 0)
+API call failed after 3 attempts: Expecting value: line 1 column 1 (char 0)
+No news found for 000333.SZ
+Got 0 news items
+No data
+(venv) ➜  ai-investment-agent git:(main) ✗ python3 -c "from src.data.eastmoney_collector import EastmoneyCollector; collector = EastmoneyCollector(); print('Testing get_market_cap:'); result = collector.get_market_cap('000333.SZ'); print(f'Market cap: {result}')"
+Testing get_market_cap:
+Error fetching market cap for 000333.SZ: 'NoneType' object has no attribute 'get'
+Market cap: None
+(venv) ➜  ai-investment-agent git:(main) ✗ python3 -c "from src.data.eastmoney_collector import EastmoneyCollector; collector = EastmoneyCollector(); print('Testing get_financials:'); fin = collector.get_financials('000333.SZ'); print(f'Got {len(fin)} financial records'); print('\\nTesting get_news:'); news = collector.get_news('000333.SZ'); print(f'Got {len(news)} news items'); print(news[0]); print('\\nTesting get_insider_trades:'); trades = collector.get_insider_trades('000333.SZ'); print(f'Got {len(trades)} insider trades'); print(trades[0]); print('\\nTesting get_market_cap:'); cap = collector.get_market_cap('000333.SZ'); print(f'Market cap: {cap}')"
+Testing get_financials:
+Got 9 financial records
+
+Testing get_news:
+Got 3 news items
+{'title': 'Quarterly earnings report for 000333.SZ', 'date': '2025-06-09', 'source': 'EastMoney', 'url': 'https://finance.eastmoney.com/news/000333.html'}
+
+Testing get_insider_trades:
+Got 3 insider trades
+{'name': 'Zhang Wei', 'position': 'Director', 'change_type': 'Buy', 'change_shares': 50000, 'change_ratio': 0.05, 'price': 45.6, 'date': '2025-05-10'}
+
+Testing get_market_cap:
+Market cap: 450000000000
+(venv) ➜  ai-investment-agent git:(main) ✗ python3 src/main.py
+Traceback (most recent call last):
+  File "/Users/weimingzhuang/Documents/source_code/ai-investment-agent/src/main.py", line 7, in <module>
+    from .analysis.analysis_orchestrator import StockAnalysisOrchestrator
+ImportError: attempted relative import with no known parent package
+(venv) ➜  ai-investment-agent git:(main) ✗ python3 src/web/server.py
+Traceback (most recent call last):
+  File "/Users/weimingzhuang/Documents/source_code/ai-investment-agent/src/web/server.py", line 6, in <module>
+    from ..analysis.analysis_orchestrator import StockAnalysisOrchestrator
+ImportError: attempted relative import with no known parent package
+(venv) ➜  ai-investment-agent git:(main) ✗ python3 -c "import sys; sys.path.append('/Users/weimingzhuang/Documents/source_code/ai-investment-agent'); from src.data.eastmoney_collector import EastmoneyCollector; collector = EastmoneyCollector(); print('Testing EastmoneyCollector:'); print('\\nFinancials:'); fin = collector.get_financials('000333.SZ'); print(f'Got {len(fin)} financial records'); print(fin[0] if fin else 'No data'); print('\\nNews:'); news = collector.get_news('000333.SZ'); print(f'Got {len(news)} news items'); print(news[0] if news else 'No data'); print('\\nInsider Trades:'); trades = collector.get_insider_trades('000333.SZ'); print(f'Got {len(trades)} insider trades'); print(trades[0] if trades else 'No data'); print('\\nMarket Cap:'); cap = collector.get_market_cap('000333.SZ'); print(f'Market cap: {cap}')"
+Testing EastmoneyCollector:
+
+Financials:
+Got 9 financial records
+{'report_date': '2025-03-31 00:00:00', 'revenue': 0, 'net_profit': 0, 'eps': 0, 'roe': 0, 'debt_ratio': 0, 'profit_margin': 0}
+
+News:
+Got 3 news items
+{'title': 'Quarterly earnings report for 000333.SZ', 'date': '2025-06-09', 'source': 'EastMoney', 'url': 'https://finance.eastmoney.com/news/000333.html'}
+
+Insider Trades:
+Got 3 insider trades
+{'name': 'Zhang Wei', 'position': 'Director', 'change_type': 'Buy', 'change_shares': 50000, 'change_ratio': 0.05, 'price': 45.6, 'date': '2025-05-10'}
+
+Market Cap:
+Market cap: 450000000000
+(venv) ➜  ai-investment-agent git:(main) ✗ python3 -c "import sys; sys.path.append('/Users/weimingzhuang/Documents/source_code/ai-investment-agent'); from src.data.stock_data_collector import StockDataCollector; collector = StockDataCollector(); print('Testing StockDataCollector with EastmoneyCollector:'); data = collector.collect_stock_data('000333.SZ'); print('\\nCollected data keys:', list(data.keys())); print('\\nNews items:', len(data.get('news', []))); print('\\nInsider trades:', len(data.get('insider_trades', []))); print('\\nFinancials available:', 'financials' in data)"
+Testing StockDataCollector with EastmoneyCollector:
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+AttributeError: 'coroutine' object has no attribute 'keys'
+sys:1: RuntimeWarning: coroutine 'StockDataCollector.collect_stock_data' was never awaited
+(venv) ➜  ai-investment-agent git:(main) ✗ python3 -c "import sys, asyncio; sys.path.append('/Users/weimingzhuang/Documents/source_code/ai-investment-agent'); from src.data.stock_data_collector import StockDataCollector; async def test(): collector = StockDataCollector(); print('Testing StockDataCollector with EastmoneyCollector:'); data = await collector.collect_stock_data('000333.SZ'); print('\\nCollected data keys:', list(data.keys())); print('\\nFinancials available:', 'fundamental_data' in data); print('\\nMarket data available:', 'market_data' in data); print('\\nPrice data available:', 'price_data' in data); print('\\nTesting direct methods:'); news = collector.get_news('000333.SZ'); print(f'News items: {len(news)}'); insider_trades = collector.get_insider_trades('000333.SZ'); print(f'Insider trades: {len(insider_trades)}'); market_cap = collector.get_market_cap('000333.SZ'); print(f'Market cap: {market_cap}'); asyncio.run(test())"
+  File "<string>", line 1
+    import sys, asyncio; sys.path.append('/Users/weimingzhuang/Documents/source_code/ai-investment-agent'); from src.data.stock_data_collector import StockDataCollector; async def test(): collector = StockDataCollector(); print('Testing StockDataCollector with EastmoneyCollector:'); data = await collector.collect_stock_data('000333.SZ'); print('\nCollected data keys:', list(data.keys())); print('\nFinancials available:', 'fundamental_data' in data); print('\nMarket data available:', 'market_data' in data); print('\nPrice data available:', 'price_data' in data); print('\nTesting direct methods:'); news = collector.get_news('000333.SZ'); print(f'News items: {len(news)}'); insider_trades = collector.get_insider_trades('000333.SZ'); print(f'Insider trades: {len(insider_trades)}'); market_cap = collector.get_market_cap('000333.SZ'); print(f'Market cap: {market_cap}'); asyncio.run(test())
+                                                                                                                                                                          ^^^^^
+SyntaxError: invalid syntax
+(venv) ➜  ai-investment-agent git:(main) ✗ python3 -c "import sys, asyncio; sys.path.append('/Users/weimingzhuang/Documents/source_code/ai-investment-agent'); from src.data.stock_data_collector import StockDataCollector; async def test(): collector = StockDataCollector(); print('Testing StockDataCollector with EastmoneyCollector:'); data = await collector.collect_stock_data('000333.SZ'); print('\\nCollected data keys:', list(data.keys())); print('\\nFinancials available:', 'fundamental_data' in data); print('\\nMarket data available:', 'market_data' in data); print('\\nPrice data available:', 'price_data' in data); print('\\nTesting direct methods:'); news = collector.get_news('000333.SZ'); print(f'News items: {len(news)}'); insider_trades = collector.get_insider_trades('000333.SZ'); print(f'Insider trades: {len(insider_trades)}'); market_cap = collector.get_market_cap('000333.SZ'); print(f'Market cap: {market_cap}'); asyncio.run(test())"
+  File "<string>", line 1
+    import sys, asyncio; sys.path.append('/Users/weimingzhuang/Documents/source_code/ai-investment-agent'); from src.data.stock_data_collector import StockDataCollector; async def test(): collector = StockDataCollector(); print('Testing StockDataCollector with EastmoneyCollector:'); data = await collector.collect_stock_data('000333.SZ'); print('\nCollected data keys:', list(data.keys())); print('\nFinancials available:', 'fundamental_data' in data); print('\nMarket data available:', 'market_data' in data); print('\nPrice data available:', 'price_data' in data); print('\nTesting direct methods:'); news = collector.get_news('000333.SZ'); print(f'News items: {len(news)}'); insider_trades = collector.get_insider_trades('000333.SZ'); print(f'Insider trades: {len(insider_trades)}'); market_cap = collector.get_market_cap('000333.SZ'); print(f'Market cap: {market_cap}'); asyncio.run(test())
+                                                                                                                                                                          ^^^^^
+SyntaxError: invalid syntax
+(venv) ➜  ai-investment-agent git:(main) ✗ python3 -c "import sys, asyncio; sys.path.append('/Users/weimingzhuang/Documents/source_code/ai-investment-agent'); from src.data.stock_data_collector import StockDataCollector; async def main(): collector = StockDataCollector(); print('Testing direct methods:'); news = collector.get_news('000333.SZ'); print(f'News items: {len(news)}'); insider_trades = collector.get_insider_trades('000333.SZ'); print(f'Insider trades: {len(insider_trades)}'); market_cap = collector.get_market_cap('000333.SZ'); print(f'Market cap: {market_cap}'); asyncio.run(main())"
+  File "<string>", line 1
+    import sys, asyncio; sys.path.append('/Users/weimingzhuang/Documents/source_code/ai-investment-agent'); from src.data.stock_data_collector import StockDataCollector; async def main(): collector = StockDataCollector(); print('Testing direct methods:'); news = collector.get_news('000333.SZ'); print(f'News items: {len(news)}'); insider_trades = collector.get_insider_trades('000333.SZ'); print(f'Insider trades: {len(insider_trades)}'); market_cap = collector.get_market_cap('000333.SZ'); print(f'Market cap: {market_cap}'); asyncio.run(main())
+                                                                                                                                                                          ^^^^^
+SyntaxError: invalid syntax
+(venv) ➜  ai-investment-agent git:(main) ✗ python3 /Users/weimingzhuang/Documents/source_code/ai-investment-agent/test_collector.py
+
+Testing EastmoneyCollector directly:
+Got 9 financial records
+Got 3 news items
+Got 3 insider trades
+Market cap: 450000000000
+Testing StockDataCollector with EastmoneyCollector:
+
+Testing direct methods:
+News items: 3
+Insider trades: 3
+Error fetching market cap for 000333.SZ: HTTPSConnectionPool(host='82.push2.eastmoney.com', port=443): Max retries exceeded with url: /api/qt/clist/get?pn=1&pz=100&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f12&fs=m%3A0+t%3A6%2Cm%3A0+t%3A80%2Cm%3A1+t%3A2%2Cm%3A1+t%3A23%2Cm%3A0+t%3A81+s%3A2048&fields=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6%2Cf7%2Cf8%2Cf9%2Cf10%2Cf12%2Cf13%2Cf14%2Cf15%2Cf16%2Cf17%2Cf18%2Cf20%2Cf21%2Cf23%2Cf24%2Cf25%2Cf22%2Cf11%2Cf62%2Cf128%2Cf136%2Cf115%2Cf152 (Caused by SSLError(SSLError(1, '[DSA] unexpected eof while reading (_ssl.c:2578)')))
+Market cap: 0.0
+
+Testing async collect_stock_data method:
+Error fetching market data for 000333.SZ: HTTPSConnectionPool(host='82.push2.eastmoney.com', port=443): Max retries exceeded with url: /api/qt/clist/get?pn=1&pz=100&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f12&fs=m%3A0+t%3A6%2Cm%3A0+t%3A80%2Cm%3A1+t%3A2%2Cm%3A1+t%3A23%2Cm%3A0+t%3A81+s%3A2048&fields=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6%2Cf7%2Cf8%2Cf9%2Cf10%2Cf12%2Cf13%2Cf14%2Cf15%2Cf16%2Cf17%2Cf18%2Cf20%2Cf21%2Cf23%2Cf24%2Cf25%2Cf22%2Cf11%2Cf62%2Cf128%2Cf136%2Cf115%2Cf152 (Caused by SSLError(SSLError(1, '[DSA] unexpected eof while reading (_ssl.c:2578)')))
+Invalid historical data format for 000333.SZ
+No financial data found for 000333.SZ
+Collected data keys: ['symbol', 'timestamp', 'urls', 'vix', 'fundamental_data', 'market_data', 'price_data']
+Financials available: True
+Market data available: True
+Price data available: True
+(venv) ➜  ai-investment-agent git:(main) ✗ python3 /Users/weimingzhuang/Documents/source_code/ai-investment-agent/demo_app.py
+ * Serving Flask app 'demo_app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 496-336-721
+127.0.0.1 - - [09/Jun/2025 16:20:59] "GET /?ide_webview_request_time=1749457259659 HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2025 16:21:29] "GET /api/news?symbol=600788.SH HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2025 16:21:29] "GET /api/insider_trades?symbol=600788.SH HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2025 16:21:29] "GET /api/market_cap?symbol=600788.SH HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2025 16:21:29] "GET /api/financials?symbol=600788.SH HTTP/1.1" 200 -
+^C%                                                                                                                                                                                                                                                                                           
+(venv) ➜  ai-investment-agent git:(main) ✗ python3 /Users/weimingzhuang/Documents/source_code/ai-investment-agent/demo_app.py
+ * Serving Flask app 'demo_app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 496-336-721
+127.0.0.1 - - [09/Jun/2025 16:29:59] "GET /?ide_webview_request_time=1749457799464 HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2025 16:29:59] "GET /api/cache_stats HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2025 16:31:48] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2025 16:31:48] "GET /api/cache_stats HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2025 16:31:48] code 400, message Bad request version ('}\x88N\x05\x06J<^6\x8cu\x02Ã\x8bÓÀ7$õù\x10¬×èAÎ\x00*ºº\x13\x01\x13\x02\x13\x03À,À+Ì©À0À/Ì¨À')
+127.0.0.1 - - [09/Jun/2025 16:31:48] "\x16\x03\x01\x02\x00\x01\x00\x01ü\x03\x03\x90\x7fÊö©¢\x0fÈ\x00#{\x01Ê»§Ë-×D\x19}8CÞ9B£Rµc\x09ø fR¸\x02\x0b\x1c}\x88N\x05\x06J<^6\x8cu\x02Ã\x8bÓÀ7$õù\x10¬×èAÎ\x00*ºº\x13\x01\x13\x02\x13\x03À,À+Ì©À0À/Ì¨À" HTTPStatus.BAD_REQUEST -
+127.0.0.1 - - [09/Jun/2025 16:31:48] code 400, message Bad request version ('\x92ÞYÐ\x00,')
+127.0.0.1 - - [09/Jun/2025 16:31:48] "\x16\x03\x01\x02\x00\x01\x00\x01ü\x03\x039¡[\x99\x135\x04\x1fªK|pÛ(t~\x9eúX-\x83+¬\x11\x04\x0dõk\x8b\x9ezî Á-æm\x13Ý\x89:\x0fÝyr\x8d\x891"ëÔ\x96\x1aAÕnÁ'Y\x01\x0d\x92ÞYÐ\x00," HTTPStatus.BAD_REQUEST -
+127.0.0.1 - - [09/Jun/2025 16:31:48] code 400, message Bad HTTP/0.9 request type ('\x16\x03\x01\x00}\x01\x00\x00y\x03\x01\x9aÙ>ê¢\x8d7>Qt\x84¥mCÒ¢©÷v\x8d°\x0eâ')
+127.0.0.1 - - [09/Jun/2025 16:31:48] "\x16\x03\x01\x00}\x01\x00\x00y\x03\x01\x9aÙ>ê¢\x8d7>Qt\x84¥mCÒ¢©÷v\x8d°\x0eâ\x85B´%ìÅe·@\x00\x00\x14À" HTTPStatus.BAD_REQUEST -
+127.0.0.1 - - [09/Jun/2025 16:32:03] "GET /api/cache_stats HTTP/1.1" 200 -
+API call failed, retrying in 0.5s: Expecting value: line 1 column 1 (char 0)
+Failed to get insider trades from API for 600788.SH: argument of type 'NoneType' is not iterable. Using mock data.
+127.0.0.1 - - [09/Jun/2025 16:32:04] "GET /api/insider_trades?symbol=600788.SH&limit=10 HTTP/1.1" 200 -
+Failed to get market cap from API for 600788.SH: 'NoneType' object has no attribute 'get'. Using mock data.
+127.0.0.1 - - [09/Jun/2025 16:32:04] "GET /api/market_cap?symbol=600788.SH HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2025 16:32:04] "GET /api/cache_stats HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2025 16:32:04] "GET /api/cache_stats HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2025 16:32:04] "GET /api/financials?symbol=600788.SH HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2025 16:32:04] "GET /api/cache_stats HTTP/1.1" 200 -
+API call failed, retrying in 1.0s: Expecting value: line 1 column 1 (char 0)
+API call failed after 3 attempts: Expecting value: line 1 column 1 (char 0)
+127.0.0.1 - - [09/Jun/2025 16:32:06] "GET /api/news?symbol=600788.SH&limit=5 HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2025 16:32:06] "GET /api/cache_stats HTTP/1.1" 200 -
+^C%                                                                                                                                                                                                                                                                                           
+(venv) ➜  ai-investment-agent git:(main) ✗ python3 /Users/weimingzhuang/Documents/source_code/ai-investment-agent/demo_app.py
+ * Serving Flask app 'demo_app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 496-336-721
+127.0.0.1 - - [09/Jun/2025 16:32:56] "GET /?ide_webview_request_time=1749457976243 HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2025 16:32:56] "GET /api/cache_stats HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2025 16:39:15] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2025 16:39:15] "GET /api/cache_stats HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2025 16:39:15] code 400, message Bad request version ('TFMz0\x11ÈmJ-âÝ$qÖ\x99»¼ÖÆ\x14ê\x97ê\x15\x00*')
+127.0.0.1 - - [09/Jun/2025 16:39:15] "\x16\x03\x01\x02\x00\x01\x00\x01ü\x03\x03Þ¼~^Éê\x1dT#_I§@thJ\x16\x91Mü)q\x05ì\x8d\x84Ô\x84È¿i^ nõâù¬Í TFMz0\x11ÈmJ-âÝ$qÖ\x99»¼ÖÆ\x14ê\x97ê\x15\x00*" HTTPStatus.BAD_REQUEST -
+127.0.0.1 - - [09/Jun/2025 16:39:15] code 400, message Bad request version ('»\x00,jj\x13\x01\x13\x02\x13\x03À,À+Ì©À0À/Ì¨À')
+127.0.0.1 - - [09/Jun/2025 16:39:15] "\x16\x03\x01\x02\x00\x01\x00\x01ü\x03\x03d\x84ö\x00T[)¿"PÕGzÛ\x9eF6_\x05jBÈ\x9aüÄ±I\x17\x9cË\x13\x03 dfæ8\x98ÂX\x8eõ\x91\x98\x8bxÖRÎ\x99\x04\x9fÈ\x90â`ÜC\x8de\x8cã\x8e\x0d»\x00,jj\x13\x01\x13\x02\x13\x03À,À+Ì©À0À/Ì¨À" HTTPStatus.BAD_REQUEST -
+127.0.0.1 - - [09/Jun/2025 16:39:15] code 400, message Bad request syntax ('\x16\x03\x01\x00}\x01\x00\x00y\x03\x01É\x82\x98µ¢Á\x7f\x8cLå¾ñy±ðo\x9bßò3Â\x9e&,Ìqb!\x83\x95ó\x87\x00\x00\x14À')
+127.0.0.1 - - [09/Jun/2025 16:39:15] "\x16\x03\x01\x00}\x01\x00\x00y\x03\x01É\x82\x98µ¢Á\x7f\x8cLå¾ñy±ðo\x9bßò3Â\x9e&,Ìqb!\x83\x95ó\x87\x00\x00\x14À" HTTPStatus.BAD_REQUEST -
+^C%                                                                                                                                                                                                                                                                                           
+(venv) ➜  ai-investment-agent git:(main) ✗ python3 /Users/weimingzhuang/Documents/source_code/ai-investment-agent/src/web/app.py
+/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/langchain/llms/__init__.py:548: LangChainDeprecationWarning: Importing LLMs from langchain is deprecated. Importing from langchain will no longer be supported as of langchain==0.2.0. Please import from langchain-community instead:
+
+`from langchain_community.llms import Ollama`.
+
+To install langchain-community run `pip install -U langchain-community`.
+  warnings.warn(
+ * Serving Flask app 'app'
+ * Debug mode: on
+INFO:werkzeug:WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://172.20.10.2:5001
+INFO:werkzeug:Press CTRL+C to quit
+INFO:werkzeug: * Restarting with stat
+/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/langchain/llms/__init__.py:548: LangChainDeprecationWarning: Importing LLMs from langchain is deprecated. Importing from langchain will no longer be supported as of langchain==0.2.0. Please import from langchain-community instead:
+
+`from langchain_community.llms import Ollama`.
+
+To install langchain-community run `pip install -U langchain-community`.
+  warnings.warn(
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 496-336-721
+INFO:werkzeug:127.0.0.1 - - [09/Jun/2025 17:02:30] "GET /?ide_webview_request_time=1749459750139 HTTP/1.1" 200 -
+ERROR:src.data.akshare_collector:Invalid historical data format for 600788.SH
+ERROR:src.data.akshare_collector:Error fetching market data for 600788.SH: HTTPSConnectionPool(host='82.push2.eastmoney.com', port=443): Max retries exceeded with url: /api/qt/clist/get?pn=1&pz=100&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f12&fs=m%3A0+t%3A6%2Cm%3A0+t%3A80%2Cm%3A1+t%3A2%2Cm%3A1+t%3A23%2Cm%3A0+t%3A81+s%3A2048&fields=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6%2Cf7%2Cf8%2Cf9%2Cf10%2Cf12%2Cf13%2Cf14%2Cf15%2Cf16%2Cf17%2Cf18%2Cf20%2Cf21%2Cf23%2Cf24%2Cf25%2Cf22%2Cf11%2Cf62%2Cf128%2Cf136%2Cf115%2Cf152 (Caused by SSLError(SSLError(1, '[DSA] unexpected eof while reading (_ssl.c:2578)')))
+WARNING:src.data.akshare_collector:No financial data found for 600788.SH
+ERROR:src.analysis.analysis_orchestrator:Error running warren_buffett strategy: 'analyst_signals'
+ERROR:src.analysis.analysis_orchestrator:Error running technical strategy: 'analyst_signals'
+INFO:src.data.eastmoney_collector:Retrieved 9 financial records for 600788.SH with 20 metrics each
+WARNING:src.data.eastmoney_collector:API call failed, retrying in 0.5s: Expecting value: line 1 column 1 (char 0)
+WARNING:src.data.eastmoney_collector:API call failed, retrying in 1.0s: Expecting value: line 1 column 1 (char 0)
+ERROR:src.data.eastmoney_collector:API call failed after 3 attempts: Expecting value: line 1 column 1 (char 0)
+INFO:src.data.eastmoney_collector:Retrieved 5 news items for 600788.SH (mock data)
+WARNING:src.data.eastmoney_collector:Failed to get insider trades from API for 600788.SH: argument of type 'NoneType' is not iterable. Using mock data.
+INFO:src.data.eastmoney_collector:Retrieved 6 insider trades for 600788.SH (mock data)
+WARNING:src.data.eastmoney_collector:Failed to get market cap from API for 600788.SH: 'NoneType' object has no attribute 'get'. Using mock data.
+INFO:src.data.eastmoney_collector:Retrieved market cap data for 600788.SH (mock data)
+/Users/weimingzhuang/.pyenv/versions/3.10.13/lib/python3.10/site-packages/langchain_core/_api/deprecation.py:119: LangChainDeprecationWarning: The method `Chain.run` was deprecated in langchain 0.1.0 and will be removed in 0.2.0. Use invoke instead.
+  warn_deprecated(
+<think>
+Okay, I need to analyze the investment potential of this company based on the provided data. Let's start by breaking down the user's requirements. They want an investment analysis considering five main points: growth rate vs. industry average, PEG ratio, management quality and insider activity, company narrative and market position, and an overall recommendation. Plus, they want a structured response with key metrics, technical analysis, and investment recommendation sections. 
+
+First, I'll look at the key metrics. The market cap is over 407 billion CNY, which is huge. The price is around 20.67 CNY. The P/E ratio is 25.91, and the P/B ratio is 6.91. But wait, the user mentioned the PEG ratio. I need to calculate that. However, the data doesn't provide the earnings growth rate. Hmm, that's a problem. Without the growth rate, I can't compute PEG. Maybe I should note that the industry average growth rate is needed for PEG analysis.
+
+Next, the financials section has financial ratios. The debt-to-equity is 0.45, which is low, suggesting the company isn't overly leveraged. The return on equity is 12.5%, which is decent but not exceptional. The current ratio is 1.8, indicating good short-term liquidity. However, the profit margin is 18.2%, which seems high. I wonder if that's realistic. Maybe it's a service-based company or has high pricing power.
+
+Looking at the insider trades, there's a mix of buying and selling. For example, Zhang Wei (Director) bought 50,000 shares, and Chen Feng (Chairman) bought 250,000. That's positive. But Li Jing (CFO) sold 100,000, and Liu Mei (CTO) sold 200,000. Selling by insiders can be a red flag, but the reasons given are "Confidence in Company" and "Retirement Planning." The CEO buying shares is a positive sign. The overall insider activity seems mixed but not overly negative. The total shares and float shares are also given, but I need to check if the insider transactions are significant relative to the float.
+
+For the company narrative, the market cap is huge, so it's likely a large-cap stock. The price has increased by about 0.5% in the last session, with a high of 21.61 and low of 20.22. The volume is 276 million, with a turnover rate of 1.79%, which is low. That might indicate low liquidity or a large-cap stock. The technical indicators aren't provided directly, but the user wants RSI, MACD, and SMA. Since the data doesn't include these, I might have to note that the technical analysis is limited without those metrics. However, the price has been trading between 20.22 and 21.61, so maybe the SMA 50 and 200 can be inferred if there's a trend. But without specific data, I can't compute them. I'll have to mention that the technical analysis is based on available data and that more info is needed.
+
+The market position is described in the news articles. The company is well-positioned to adapt to regulatory changes, has potential for expansion, and there's a management change aimed at innovation. The insider buying might indicate confidence. However, the PEG ratio analysis is tricky without the growth rate. If the industry average growth is, say, 10%, and the company's earnings growth is 8%, then the PEG would be 25.91 / 8 = 3.24, which is high. But without actual numbers, this is speculative.
+
+In the investment recommendation, considering the P/E of 25.91 and the P/B of 6.91, the company might be overvalued unless the growth prospects are strong. The insider buying could be a positive, but the selling might indicate some concerns. The risk assessment would need to consider the company's size, debt, and industry position. Growth potential depends on the industry's average and the company's ability to grow earnings. Valuation analysis would compare P/E and P/B with industry averages, but again, without those, it's hard. The time horizon might suggest a long-term hold if the company is a leader in its industry, but the high P/B might make it risky.
+
+I need to structure all this into the required sections. In the key metrics, mention market cap, price, P/E, P/B, debt-to-equity, ROE, current ratio, and profit margin. In the technical analysis, note the lack of specific indicators but mention the price range and turnover. For the investment recommendation, discuss the mixed insider activity, valuation, growth potential, and risk. However, the absence of some data points like industry averages and technical indicators could limit the depth of the analysis. I should highlight these limitations as well.
+</think>
+
+### **Investment Analysis for 600788.SH**  
+
+---
+
+### **1. Key Metrics Analysis**  
+**Current Market Metrics:**  
+- **Market Cap:** ~407.7 billion CNY (Large-cap stock).  
+- **Price:** 20.67 CNY (Trading near 20.57 close price).  
+- **P/E Ratio:** 25.91 (Suggests investors pay ~25.91 CNY for every 1 CNY of earnings).  
+- **P/B Ratio:** 6.91 (Indicates the stock is trading at ~6.9x book value, potentially overvalued relative to peers).  
+- **Dividend Yield:** 0.98% (Low yield, suggesting reinvestment into growth).  
+
+**Financial Health (from Financial Ratios):**  
+- **Debt-to-Equity Ratio:** 0.45 (Conservative leverage, low financial risk).  
+- **Return on Equity (ROE):** 12.5% (Moderate, but not exceptional).  
+- **Current Ratio:** 1.8 (Strong short-term liquidity).  
+- **Profit Margin:** 18.2% (High, indicating efficient operations or pricing power).  
+
+---
+
+### **2. Technical Analysis**  
+**Price Trends & Indicators:**  
+- **Price Range:** Traded between 20.22 CNY (low) and 21.61 CNY (high) in the last session, with a **0.51% price increase**.  
+- **Volume:** 276.86 million shares traded, with a **turnover rate of 1.79%** (Low liquidity for a large-cap stock).  
+- **MACD & RSI:** Not explicitly provided in the data (Limitation in analysis).  
+- **SMA (50/200):** No specific data available, but the stock’s price stability suggests potential consolidation or long-term trend.  
+
+**Volume Analysis:**  
+- **Insider Buying Activity:** Notable purchases by executives (e.g., Chairman Chen Feng bought 250,000 shares at 50 CNY/share in 2025).  
+- **Insider Selling Activity:** CFO Li Jing sold 100,000 shares at 42.5 CNY/share (Reason: "Confidence in Company").  
+
+---
+
+### **3. Investment Recommendation**  
+
+#### **1. Growth Rate vs. Industry Average**  
+- **Earnings Growth:** Not directly provided, but the **P/E ratio (25.91)** suggests the market expects moderate growth.  
+- **PEG Ratio Analysis:** Requires **earnings growth rate** and **industry average** (Not available in data). However, a P/E of 25.91 combined with a P/B of 6.91 implies the stock may be overvalued unless the growth rate is significantly higher than the industry average.  
+
+#### **2. Management Quality & Insider Activity**  
+- **Positive Signals:**  
+  - **Chairman Chen Feng** and **Director Zhang Wei** have made substantial **buying transactions**, indicating confidence in the company’s future.  
+  - **CEO Wang Tao** purchased shares via **private placement**, suggesting alignment with long-term value.  
+- **Negative Signals:**  
+  - **CFO Li Jing** and **CTO Liu Mei** sold shares, citing **retirement planning** and **personal financial needs**. While not inherently negative, insider selling can signal underperformance or lack of confidence.  
+
+#### **3. Company Narrative & Market Position**  
+- **Market Position:**  
+  - The company is described as **"well-positioned to adapt"** to regulatory changes and has **"potential for expansion"** (per news articles).  
+  - **Management reshuffle** aims to strengthen innovation, which could drive growth.  
+- **Narrative Risks:**  
+  - Regulatory changes (e.g., new regulations in June 2025) may introduce short-term uncertainty.  
+  - High P/B ratio (6.91) suggests the market may be pricing in **aggressive growth expectations** or overvaluation.  
+
+---
+
+### **4. Valuation & Risk Assessment**  
+- **Valuation:**  
+  - **P/E (25.91)** and **P/B (6.91)** are **above industry averages** (assuming peers trade at lower multiples). This could indicate **overvaluation** unless growth rates are exceptionally high.  
+  - **PEG Ratio:** Insufficient data to compute, but if growth is **below industry average**, the stock may be overpriced.  
+- **Risk Factors:**  
+  - **High P/B Ratio:** Suggests potential overvaluation or aggressive growth expectations.  
+  - **Regulatory Uncertainty:** May impact short-term performance.  
+  - **Insider Selling:** Could signal lack of confidence in near-term prospects.  
+
+---
+
+### **5. Overall Investment Recommendation**  
+**Long-Term Hold (with Caution):**  
+- **Rationale:** The company has a **strong balance sheet**, **high profit margins**, and **positive insider buying**. Its **market position** and **innovation focus** could drive long-term growth.  
+- **Risks:** Overvaluation (high P/B), regulatory risks, and insider selling.  
+- **Short-Term Outlook:** **Neutral** due to limited technical indicators and low liquidity (1.79% turnover).  
+
+**Considerations for Investors:**  
+- **Value Investors:** May avoid due to high P/B and lack of undervaluation.  
+- **Growth Investors:** May consider if the company’s growth prospects significantly outperform the industry.  
+- **Momentum Traders:** Limited data on technical indicators (MACD, RSI) restricts analysis.  
+
+---
+
+### **Conclusion**  
+600788.SH appears to be a **large-cap, high-margin company** with a **conservative balance sheet** and **mixed insider activity**. While its fundamentals are strong, the **high P/B ratio** and **uncertain growth expectations** raise valuation concerns. Investors should **monitor regulatory developments** and **evaluate industry growth rates** before committing capital.INFO:werkzeug:127.0.0.1 - - [09/Jun/2025 17:07:37] "POST /analyze HTTP/1.1" 200 -
+^C%                                                                                                                                                                                                                                                                                           
+(venv) ➜  ai-investment-agent git:(main) ✗ 

@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Any
 import json
 import logging
 from langchain.chains import LLMChain
@@ -105,7 +105,7 @@ Analysis:"""
             
             # Get analysis from LLM
             response = chain.run(
-                system_prompt=chain.prompt.template,
+                system_prompt="You are an expert financial analyst AI assistant.",
                 context=context,
                 question=question
             )
@@ -152,7 +152,9 @@ Analysis:"""
         5. Overall investment recommendation
         """
 
-        return self.create_analysis_chain(system_prompt).run(
+        chain = self.create_analysis_chain(system_prompt)
+        return chain.run(
+            system_prompt=system_prompt,
             context=json.dumps(context, indent=2),
             question=question
         )
@@ -172,7 +174,9 @@ Analysis:"""
         5. Trading recommendation
         """
 
-        return self.create_analysis_chain(system_prompt).run(
+        chain = self.create_analysis_chain(system_prompt)
+        return chain.run(
+            system_prompt=system_prompt,
             context=json.dumps(context, indent=2),
             question=question
         )
@@ -204,7 +208,57 @@ Analysis:"""
         5. Long-term investment potential
         """
 
-        return self.create_analysis_chain(system_prompt).run(
+        chain = self.create_analysis_chain(system_prompt)
+        return chain.run(
+            system_prompt=system_prompt,
             context=json.dumps(context, indent=2),
             question=question
         )
+        
+    def analyze(self, llm_response: str) -> Dict[str, Any]:
+        """Parse LLM response to extract signal, confidence, and reasoning"""
+        try:
+            # Default values
+            signal = "neutral"
+            confidence = 50
+            reasoning = llm_response
+            
+            # Look for signal keywords
+            lower_response = llm_response.lower()
+            if "bullish" in lower_response:
+                signal = "bullish"
+            elif "bearish" in lower_response:
+                signal = "bearish"
+            
+            # Try to extract confidence
+            import re
+            confidence_patterns = [
+                r"confidence[:\s]*(\d+)", 
+                r"confidence[:\s]*([\d\.]+)%",
+                r"(\d+)%\s*confidence"
+            ]
+            
+            for pattern in confidence_patterns:
+                match = re.search(pattern, lower_response)
+                if match:
+                    try:
+                        confidence = float(match.group(1))
+                        # If confidence was expressed as a percentage out of 100
+                        if confidence > 0 and confidence <= 100:
+                            break
+                    except ValueError:
+                        pass
+            
+            return {
+                "signal": signal,
+                "confidence": confidence,
+                "reasoning": reasoning
+            }
+            
+        except Exception as e:
+            logger.error(f"Error parsing LLM response: {str(e)}")
+            return {
+                "signal": "neutral",
+                "confidence": 0,
+                "reasoning": f"Error parsing response: {str(e)}"
+            }
